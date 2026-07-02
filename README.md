@@ -4,6 +4,42 @@ A reusable **accessibility (a11y) skill** for AI coding assistants. It teaches t
 
 Use this skill when you or your team work on accessibility, a11y, WCAG, screen readers, keyboard navigation, focus management, ARIA, semantic HTML, or fixing accessibility issues in HTML/React/Next.js/Vue or other front-end code.
 
+![Check and Fix Accessibility — AI skill for auditing and fixing a11y issues](assets/social-card-dark.png)
+
+---
+
+## Quick start
+
+1. **Clone this repo** (replace `YOUR_USERNAME` with the GitHub org or user):
+
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git
+   cd check-fix-accessibility
+   ```
+
+2. **Copy the `review-fix-a11y` folder** into your assistant’s skills directory (pick your tool):
+
+   | Assistant | Project (this repo only) | Global (all projects) |
+   |-----------|--------------------------|------------------------|
+   | **Cursor** | `.cursor/skills/review-fix-a11y/` | `~/.cursor/skills/review-fix-a11y/` |
+   | **Claude Code** | `.claude/skills/review-fix-a11y/` or `.claude/rules/` | `~/.claude/skills/review-fix-a11y/` |
+   | **Kiro** | `.kiro/skills/review-fix-a11y/` | `~/.kiro/skills/review-fix-a11y/` |
+   | **Codex** | — | `$CODEX_HOME/skills/review-fix-a11y/` (default `~/.codex/skills/`) |
+   | **Antigravity** | `.agent/skills/review-fix-a11y/` | `~/.gemini/antigravity/skills/review-fix-a11y/` |
+
+   Example (Cursor, project scope):
+
+   ```bash
+   mkdir -p .cursor/skills
+   cp -r review-fix-a11y .cursor/skills/
+   ```
+
+3. **Restart** your assistant (or start a new session). Ask about accessibility, a11y, or WCAG—the skill should load automatically.
+
+4. **Optional — MCP:** add the [a11y-mcp server](#mcp-a11y-mcp-configuration) for live accessibility tooling in supported assistants.
+
+**Detailed steps** (rules, skill-installer, layouts): see [Setup by platform](#setup-by-platform) below.
+
 ---
 
 ## What’s in this repo
@@ -27,6 +63,32 @@ check-fix-accessibility/          ← repo root
 | **README.md** | This file: setup for Cursor, Claude, Kiro, Codex, Google Antigravity. |
 
 When installing, use the **review-fix-a11y** folder so your tool sees a skill directory named `review-fix-a11y` containing `SKILL.md` and `reference.md`.
+
+---
+
+## MCP (a11y-mcp) configuration
+
+If your assistant supports MCP servers, add this MCP server:
+
+```json
+{
+  "mcpServers": {
+    "a11y-mcp": {
+      "url": "https://a11y-mcp.withjavascript.com/sse"
+    }
+  }
+}
+```
+
+Where to put it depends on the tool:
+
+- **Cursor**: add to Cursor settings under the `mcpServers` section (User or Workspace settings).
+- **Claude Code**: add to `~/.claude/settings.json` (or your project’s `.claude/settings.json` if you keep project settings).
+- **Codex**: add to your Codex settings JSON (commonly under `~/.codex/`), under `mcpServers`.
+- **Kiro**: add to Kiro’s settings/config (project or user), under `mcpServers` if supported by your version.
+- **Google Antigravity**: add to Antigravity’s settings where MCP servers are configured (global or workspace).
+
+If you already have other MCP servers configured, **merge** the `a11y-mcp` entry into your existing `"mcpServers"` object (don’t overwrite the whole file).
 
 ---
 
@@ -140,7 +202,9 @@ Scopes (project vs user) follow Claude Code’s hierarchy: project (`.claude/`) 
 
 ### Kiro
 
-Kiro uses **steering files** (e.g. in `.kiro/`) and **skills** with YAML frontmatter. Skills are loaded on demand based on metadata.
+Kiro uses **Agent Skills** in `.kiro/skills/` (workspace) or `~/.kiro/skills/` (global). Skills use YAML frontmatter in `SKILL.md` and load on demand.
+
+**Option A: Workspace skill (this project)**
 
 1. In your project root, create the Kiro skills directory and copy the **review-fix-a11y** folder into it:
 
@@ -149,6 +213,8 @@ Kiro uses **steering files** (e.g. in `.kiro/`) and **skills** with YAML frontma
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
    cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y .kiro/skills/
    ```
+
+   Or from this repo root: `cp -r review-fix-a11y .kiro/skills/`
 
 2. Ensure `SKILL.md` has YAML frontmatter (it already includes `name` and `description`). Kiro uses that to know when to load the skill.
 
@@ -162,7 +228,27 @@ Kiro uses **steering files** (e.g. in `.kiro/`) and **skills** with YAML frontma
 
 4. Restart Kiro or start a new session.
 
-For **global (user-wide)** use, copy the same folder under Kiro’s global skills path (if your Kiro version supports it; see [Kiro docs](https://kiro.dev/docs)).
+**Option B: Global skill (all workspaces)**
+
+1. Copy the **review-fix-a11y** folder to Kiro’s global skills directory:
+
+   ```bash
+   mkdir -p ~/.kiro/skills
+   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
+   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y ~/.kiro/skills/
+   ```
+
+2. Layout:
+
+   ```
+   ~/.kiro/skills/review-fix-a11y/
+   ├── SKILL.md
+   └── reference.md
+   ```
+
+3. Restart Kiro. Workspace skills in `.kiro/skills/` take priority over global skills if both exist with the same name.
+
+See [Kiro Agent Skills docs](https://kiro.dev/docs/skills/) for import via the IDE and custom agent `skill://` URIs.
 
 ---
 
@@ -250,7 +336,7 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 |----------------|----------------------------------------|-------------------------------|
 | **Cursor**     | `.cursor/skills/review-fix-a11y/`      | `~/.cursor/skills/review-fix-a11y/` |
 | **Claude**     | `.claude/rules/` (e.g. `accessibility.mdc`) or reference from `CLAUDE.md` | `~/.claude/skills/review-fix-a11y/` + `CLAUDE.md` |
-| **Kiro**       | `.kiro/skills/review-fix-a11y/`        | (Check Kiro docs for global path) |
+| **Kiro**       | `.kiro/skills/review-fix-a11y/`        | `~/.kiro/skills/review-fix-a11y/` |
 | **Codex**      | —                                      | `$CODEX_HOME/skills/review-fix-a11y/` (default `~/.codex/skills/`) |
 | **Antigravity**| `.agent/skills/review-fix-a11y/`       | `~/.gemini/antigravity/skills/review-fix-a11y/` |
 
