@@ -1,7 +1,7 @@
 ---
 name: check-fix-accessibility
 description: Check and fix accessibility (a11y) on front-end projects (web and mobile web), including Next.js, React, Vue, Angular. Use when the user asks about accessibility, a11y, WCAG, screen readers, voice control, Voice View, keyboard navigation, focus management, ARIA, semantic HTML, color contrast, or fixing accessibility issues in HTML, React, Next.js, Vue, or other front-end code. For native mobile apps (React Native, iOS, Android), see reference; patterns differ.
-version: 1.1.0
+version: 1.2.0
 standard: WCAG 2.2 (Level A & AA)
 last_reviewed: 2026-07-04
 ---
@@ -36,6 +36,8 @@ Use at least one automated tool; combine with manual review for important flows.
 - **ESLint + plugins**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.5.0` (Vue). Install pinned as `devDependencies`, add to CI, and fix reported rules.
 
 When fixing, use the tool’s rule ID (e.g. `button-name`, `label`, `color-contrast`) to look up the exact requirement and apply the right fix.
+
+For React projects, add runtime tests (jest-axe/vitest-axe, Testing Library role queries, cypress-axe / `@axe-core/playwright`) — linting alone misses most issues. See [reference.md](reference.md#automated-testing-in-react).
 
 ## Checklist: common issues and fixes
 
@@ -113,7 +115,7 @@ Handle these explicitly; they are often missed by automated tools.
 
 ### Single-page apps (SPA) and dynamic content
 
-- **Route / view changes**: On navigation, update `<title>` and move focus to main content or announce the change (e.g. `aria-live="polite"` region or focus to `<main>`/heading) so SR users know the page changed.
+- **Route / view changes**: On navigation, update `<title>` and move focus to main content or announce the change (e.g. `aria-live="polite"` region or focus to `<main>`/heading) so SR users know the page changed. React (react-router, `useEffect`+`ref` focus, focus-trap libs, accessible primitives): see [reference.md](reference.md#react-focus--routing).
 - **Loading states**: Use `aria-busy="true"` on the loading container and set to `false` when done. Optionally use a live region to announce "Loading…" and then the result.
 - **Hidden but focusable**: Content that is hidden (e.g. `display: none`, `hidden`, inactive tab panel) must not contain focusable elements, or those elements must be removed from the accessibility tree (e.g. `aria-hidden="true"` on container, or `inert` where supported). Otherwise keyboard/SR users can focus "invisible" elements.
 
@@ -154,5 +156,6 @@ For detailed WCAG criteria, ARIA patterns, and component examples, see [referenc
 
 ## Changelog
 
+- **1.2.0** (2026-07-04): Added React-specific `reference.md` guidance — "Automated testing in React" (jest-axe/vitest-axe, Testing Library role queries, cypress-axe / `@axe-core/playwright`, all pinned) and "React focus & routing" (useEffect+ref focus, react-router, focus-trap libs, accessible primitives like React Aria/Radix/Headless UI); cross-linked from SKILL.md.
 - **1.1.0** (2026-07-04): Corrected WCAG 2.2 Recommendation date (Oct 2023; revised edition Dec 2024); removed obsolete 4.1.1 Parsing from Robust; clarified target size (2.5.8 AA = 24×24 CSS px, 44×44 is AAA/platform best practice); pinned tool versions and fixed the Vue ESLint plugin package name; added version/last_reviewed metadata and this changelog.
 - **1.0.0**: Initial skill (audit workflow, checklist, corner cases, fix patterns, reference).
