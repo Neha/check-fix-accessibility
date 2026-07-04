@@ -1,11 +1,16 @@
 ---
 name: check-fix-accessibility
 description: Check and fix accessibility (a11y) on front-end projects (web and mobile web), including Next.js, React, Vue, Angular. Use when the user asks about accessibility, a11y, WCAG, screen readers, voice control, Voice View, keyboard navigation, focus management, ARIA, semantic HTML, color contrast, or fixing accessibility issues in HTML, React, Next.js, Vue, or other front-end code. For native mobile apps (React Native, iOS, Android), see reference; patterns differ.
+version: 1.1.0
+standard: WCAG 2.2 (Level A & AA)
+last_reviewed: 2026-07-04
 ---
 
 # Check and Fix Front-End Accessibility
 
 Systematically audit and fix accessibility issues in any front-end project. Prioritize WCAG 2.2 Level A and AA unless the user specifies otherwise.
+
+> **Versioning & currency**: This skill is versioned (see `version` above) and reviewed against a specific standard on the `last_reviewed` date. WCAG and tooling evolve — before relying on it, confirm the standard and pinned tool versions are still current, and bump `version` + `last_reviewed` and the [Changelog](#changelog) when you update guidance.
 
 ## Scope
 
@@ -23,10 +28,12 @@ Systematically audit and fix accessibility issues in any front-end project. Prio
 
 Use at least one automated tool; combine with manual review for important flows.
 
-- **Lighthouse** (Chrome DevTools): Run Accessibility audit. Good for full-page snapshot.
-- **axe DevTools** (browser extension or `@axe-core/cli`, `axe-core` in tests): Run on the page or component. Report and fix by rule ID.
-- **pa11y** (CLI): `npx pa11y <url>` for terminal reports.
-- **ESLint + plugins**: `eslint-plugin-jsx-a11y` (React), `vue-eslint-plugin-vuejs-accessibility` (Vue). Add to CI and fix reported rules.
+**Pin tool versions for reproducibility.** Prefer installing tools as `devDependencies` with an exact version (recorded in `package.json` + lockfile) over `npx <latest>`, so audit results don't drift between runs or machines. If you do use `npx`, pin the version (e.g. `npx pa11y@9.1.1`). Versions below are known-good as of the "Last reviewed" date in the front matter; check for newer releases and update deliberately.
+
+- **Lighthouse** (Chrome DevTools): Run Accessibility audit. Good for full-page snapshot. (Bundled with Chrome; note the Chrome/Lighthouse version in reports.)
+- **axe DevTools** (browser extension or `@axe-core/cli`, `axe-core` in tests): Run on the page or component. Report and fix by rule ID. Pin: `npm i -D @axe-core/cli@4.12.1 axe-core@4.12.1`.
+- **pa11y** (CLI): `npm i -D pa11y@9.1.1`, then `npx pa11y <url>` (or add an npm script) for terminal reports.
+- **ESLint + plugins**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.5.0` (Vue). Install pinned as `devDependencies`, add to CI, and fix reported rules.
 
 When fixing, use the tool’s rule ID (e.g. `button-name`, `label`, `color-contrast`) to look up the exact requirement and apply the right fix.
 
@@ -83,7 +90,7 @@ Copy and use as a progress list. Not exhaustive; expand from audit results.
 ### Responsive and zoom
 
 - [ ] **Zoom**: Layout works at 200% zoom (and preferably up to 400%). No horizontal scrolling at 320px width unless the content is inherently wide (e.g. data tables).
-- [ ] **Touch targets**: Interactive elements at least 44×44 CSS pixels where possible.
+- [ ] **Touch targets**: Meet WCAG 2.2 AA (2.5.8 Target Size Minimum) — at least **24×24 CSS px**, or adequate spacing between smaller targets. Aim for **44×44 CSS px** as best practice (WCAG AAA 2.5.5 / Apple HIG; Android suggests 48×48 dp) for primary touch controls. See [reference.md](reference.md#target-size-touchpointer).
 
 ## Corner cases and edge cases
 
@@ -144,3 +151,8 @@ Include: file/component, element or selector, rule or guideline, and a concrete 
 ## Reference
 
 For detailed WCAG criteria, ARIA patterns, and component examples, see [reference.md](reference.md) when you need deeper guidance.
+
+## Changelog
+
+- **1.1.0** (2026-07-04): Corrected WCAG 2.2 Recommendation date (Oct 2023; revised edition Dec 2024); removed obsolete 4.1.1 Parsing from Robust; clarified target size (2.5.8 AA = 24×24 CSS px, 44×44 is AAA/platform best practice); pinned tool versions and fixed the Vue ESLint plugin package name; added version/last_reviewed metadata and this changelog.
+- **1.0.0**: Initial skill (audit workflow, checklist, corner cases, fix patterns, reference).
