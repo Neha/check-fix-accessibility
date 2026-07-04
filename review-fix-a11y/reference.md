@@ -9,12 +9,12 @@ Use this when you need WCAG criteria, ARIA patterns, native mobile, or component
 
 ## WCAG 2.2 Level A & AA (summary)
 
-WCAG 2.2 (W3C Recommendation, Dec 2024) builds on 2.1 and adds success criteria such as focus not obscured (2.4.11), dragging movements (2.5.7), and target size (2.5.8). Conformance to 2.2 satisfies 2.0 and 2.1.
+WCAG 2.2 became a W3C Recommendation on 5 Oct 2023 (a revised edition was published 12 Dec 2024). It builds on 2.1 and adds success criteria such as focus not obscured (2.4.11), dragging movements (2.5.7), and target size minimum (2.5.8). WCAG 2.2 also **removed** 4.1.1 Parsing (it is now obsolete, as modern user agents handle parsing errors). Conformance to 2.2 satisfies 2.0 and 2.1.
 
 - **Perceivable**: Text alternatives for non-text content; captions/alternatives for media; content presentable in different ways (structure, contrast); distinguishable (contrast, not color-only, resize text).
 - **Operable**: Keyboard access; enough time; no seizure-inducing content; navigable (skip links, titles, focus order, link purpose); input modalities (pointer gestures not required, or have keyboard alternative).
 - **Understandable**: Readable (language of page); predictable (on focus/input, no unexpected context change); input assistance (labels, error identification/suggestion, help).
-- **Robust**: Parsable markup; name, role, value for UI components; compatibility with assistive tech.
+- **Robust**: Name, role, value for UI components; compatibility with assistive tech. (Note: 4.1.1 Parsing was removed in WCAG 2.2 and no longer applies.)
 
 ## ARIA patterns (high level)
 
@@ -26,6 +26,14 @@ WCAG 2.2 (W3C Recommendation, Dec 2024) builds on 2.1 and adds success criteria 
 
 Full patterns: [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/).
 
+## Target size (touch/pointer)
+
+- **WCAG 2.2 AA — 2.5.8 Target Size (Minimum)**: pointer targets are at least **24×24 CSS px**, or have sufficient spacing so a 24 px circle centered on the target doesn't overlap neighbors. Exceptions: inline links in text, targets controlled by the user agent, or an equivalent alternative on the same page.
+- **WCAG 2.2 AAA — 2.5.5 Target Size (Enhanced)**: at least **44×44 CSS px**.
+- **Platform best practice**: Apple HIG recommends **44×44 pt**; Android Material recommends **48×48 dp**. These exceed the AA minimum and are a good default for primary touch controls.
+
+So: **24×24 is the AA bar; 44×44 is best practice / AAA**, not the AA requirement. Aim for the larger size where practical, especially on touch UIs.
+
 ## Contrast and color
 
 - Normal text: contrast ratio ≥ 4.5:1 (AA) or 7:1 (AAA).
@@ -34,10 +42,12 @@ Full patterns: [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/).
 
 ## Testing tools
 
-- **Lighthouse**: Chrome DevTools → Lighthouse → Accessibility.
-- **axe**: `npm i -D @axe-core/cli`; `npx axe <url>` or use axe DevTools extension.
-- **pa11y**: `npx pa11y <url>`.
-- **ESLint**: `eslint-plugin-jsx-a11y` (React), `vue-eslint-plugin-vuejs-accessibility` (Vue).
+Pin exact versions (install as `devDependencies` + lockfile) rather than relying on `npx <latest>`, so results are reproducible. Versions below are known-good as of the "Last reviewed" date in SKILL.md; bump them deliberately.
+
+- **Lighthouse**: Chrome DevTools → Lighthouse → Accessibility. (Version tracks Chrome; note it in reports.)
+- **axe**: `npm i -D @axe-core/cli@4.12.1 axe-core@4.12.1`; `npx axe <url>` or use the axe DevTools extension.
+- **pa11y**: `npm i -D pa11y@9.1.1`; `npx pa11y <url>`.
+- **ESLint**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.5.0` (Vue).
 - **Contrast**: Chrome DevTools Inspect → Accessibility pane; or WebAIM Contrast Checker.
 
 ## Screen reader testing (manual)
