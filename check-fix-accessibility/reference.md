@@ -9,12 +9,26 @@ Use this when you need WCAG criteria, ARIA patterns, native mobile, or component
 
 ## WCAG 2.2 Level A & AA (summary)
 
-WCAG 2.2 became a W3C Recommendation on 5 Oct 2023 (a revised edition was published 12 Dec 2024). It builds on 2.1 and adds success criteria such as focus not obscured (2.4.11), dragging movements (2.5.7), and target size minimum (2.5.8). WCAG 2.2 also **removed** 4.1.1 Parsing (it is now obsolete, as modern user agents handle parsing errors). Conformance to 2.2 satisfies 2.0 and 2.1.
+WCAG 2.2 became a W3C Recommendation on 5 Oct 2023 (a revised edition was published 12 Dec 2024). It builds on 2.1 and adds nine new success criteria (see below). WCAG 2.2 also **removed** 4.1.1 Parsing (it is now obsolete, as modern user agents handle parsing errors). Conformance to 2.2 satisfies 2.0 and 2.1.
 
 - **Perceivable**: Text alternatives for non-text content; captions/alternatives for media; content presentable in different ways (structure, contrast); distinguishable (contrast, not color-only, resize text).
 - **Operable**: Keyboard access; enough time; no seizure-inducing content; navigable (skip links, titles, focus order, link purpose); input modalities (pointer gestures not required, or have keyboard alternative).
 - **Understandable**: Readable (language of page); predictable (on focus/input, no unexpected context change); input assistance (labels, error identification/suggestion, help).
 - **Robust**: Name, role, value for UI components; compatibility with assistive tech. (Note: 4.1.1 Parsing was removed in WCAG 2.2 and no longer applies.)
+
+### New success criteria in WCAG 2.2
+
+Don't overlook these when you claim 2.2 conformance — they're the most common gap in checklists carried over from 2.1.
+
+- **2.4.11 Focus Not Obscured (Minimum)** — *AA*: A focused element is not entirely hidden by author-created overlays (sticky headers/footers, cookie banners). Use `scroll-margin`/offsets so it stays visible.
+- **2.4.12 Focus Not Obscured (Enhanced)** — *AAA*: No part of the focused element is hidden.
+- **2.4.13 Focus Appearance** — *AAA*: Focus indicator has a minimum area and contrast.
+- **2.5.7 Dragging Movements** — *AA*: Any dragging action has a single-pointer (non-drag) alternative, unless dragging is essential.
+- **2.5.8 Target Size (Minimum)** — *AA*: Pointer targets ≥ 24×24 CSS px or adequately spaced (see [Target size](#target-size-touchpointer)).
+- **3.2.6 Consistent Help** — *AA*: Help mechanisms appear in a consistent relative order across pages.
+- **3.3.7 Redundant Entry** — *AA*: Don't require re-entering info already provided in the same process (auto-populate or offer selection).
+- **3.3.8 Accessible Authentication (Minimum)** — *AA*: No cognitive-function test (memorization, puzzles, transcription) required to authenticate; allow paste/password managers or provide an alternative.
+- **3.3.9 Accessible Authentication (Enhanced)** — *AAA*: As 3.3.8 but without the object-recognition/personal-content exceptions.
 
 ## ARIA patterns (high level)
 
