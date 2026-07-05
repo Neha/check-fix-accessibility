@@ -17,21 +17,21 @@ Use this skill when you or your team work on accessibility, a11y, WCAG, screen r
    cd check-fix-accessibility
    ```
 
-2. **Copy the `review-fix-a11y` folder** into your assistant’s skills directory (pick your tool):
+2. **Copy the `check-fix-accessibility` folder** into your assistant’s skills directory (pick your tool):
 
    | Assistant | Project (this repo only) | Global (all projects) |
    |-----------|--------------------------|------------------------|
-   | **Cursor** | `.cursor/skills/review-fix-a11y/` | `~/.cursor/skills/review-fix-a11y/` |
-   | **Claude Code** | `.claude/skills/review-fix-a11y/` or `.claude/rules/` | `~/.claude/skills/review-fix-a11y/` |
-   | **Kiro** | `.kiro/skills/review-fix-a11y/` | `~/.kiro/skills/review-fix-a11y/` |
-   | **Codex** | — | `$CODEX_HOME/skills/review-fix-a11y/` (default `~/.codex/skills/`) |
-   | **Antigravity** | `.agent/skills/review-fix-a11y/` | `~/.gemini/antigravity/skills/review-fix-a11y/` |
+   | **Cursor** | `.cursor/skills/check-fix-accessibility/` | `~/.cursor/skills/check-fix-accessibility/` |
+   | **Claude Code** | `.claude/skills/check-fix-accessibility/` or `.claude/rules/` | `~/.claude/skills/check-fix-accessibility/` |
+   | **Kiro** | `.kiro/skills/check-fix-accessibility/` | `~/.kiro/skills/check-fix-accessibility/` |
+   | **Codex** | — | `$CODEX_HOME/skills/check-fix-accessibility/` (default `~/.codex/skills/`) |
+   | **Antigravity** | `.agent/skills/check-fix-accessibility/` | `~/.gemini/antigravity/skills/check-fix-accessibility/` |
 
    Example (Cursor, project scope):
 
    ```bash
    mkdir -p .cursor/skills
-   cp -r review-fix-a11y .cursor/skills/
+   cp -r check-fix-accessibility .cursor/skills/
    ```
 
 3. **Restart** your assistant (or start a new session). Ask about accessibility, a11y, or WCAG—the skill should load automatically.
@@ -44,25 +44,25 @@ Use this skill when you or your team work on accessibility, a11y, WCAG, screen r
 
 ## What’s in this repo
 
-The **repo root** holds LICENSE, README, and .gitignore. The **skill** is in the **review-fix-a11y** subfolder: copy that folder into your tool's skills directory.
+The **repo root** holds LICENSE, README, and .gitignore. The **skill** is in the **check-fix-accessibility** subfolder: copy that folder into your tool's skills directory.
 
 ```
 check-fix-accessibility/          ← repo root
 ├── LICENSE
 ├── README.md
 ├── .gitignore
-└── review-fix-a11y/             ← the skill (copy this folder when installing)
+└── check-fix-accessibility/             ← the skill (copy this folder when installing)
     ├── SKILL.md                 ← main skill (required by all platforms)
     └── reference.md            ← WCAG, ARIA, testing, native mobile
 ```
 
 | Path | Purpose |
 |------|--------|
-| **review-fix-a11y/SKILL.md** | Main skill: workflow, checklist, fix patterns, corner cases. |
-| **review-fix-a11y/reference.md** | Deeper reference: WCAG summary, ARIA patterns, testing tools, screen readers, native mobile. |
+| **check-fix-accessibility/SKILL.md** | Main skill: workflow, checklist, fix patterns, corner cases. |
+| **check-fix-accessibility/reference.md** | Deeper reference: WCAG summary, ARIA patterns, testing tools, screen readers, native mobile. |
 | **README.md** | This file: setup for Cursor, Claude, Kiro, Codex, Google Antigravity. |
 
-When installing, use the **review-fix-a11y** folder so your tool sees a skill directory named `review-fix-a11y` containing `SKILL.md` and `reference.md`.
+When installing, use the **check-fix-accessibility** folder so your tool sees a skill directory named `check-fix-accessibility` containing `SKILL.md` and `reference.md`.
 
 ---
 
@@ -104,20 +104,20 @@ Cursor uses **skills** as directories with a `SKILL.md` file. You can use this a
 
 **Option A: Project skill (recommended for teams)**
 
-1. Clone this repo, then copy the **review-fix-a11y** folder into your project’s Cursor skills directory:
+1. Clone this repo, then copy the **check-fix-accessibility** folder into your project’s Cursor skills directory:
 
    ```bash
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
    mkdir -p .cursor/skills
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y .cursor/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility .cursor/skills/
    ```
 
-   Or from the repo root after cloning: `cp -r review-fix-a11y .cursor/skills/`
+   Or from the repo root after cloning: `cp -r check-fix-accessibility .cursor/skills/`
 
 2. Resulting layout:
 
    ```
-   .cursor/skills/review-fix-a11y/
+   .cursor/skills/check-fix-accessibility/
    ├── SKILL.md
    └── reference.md
    ```
@@ -126,12 +126,12 @@ Cursor uses **skills** as directories with a `SKILL.md` file. You can use this a
 
 **Option B: Personal skill (all projects)**
 
-1. Create your personal skills directory if needed, then copy the **review-fix-a11y** folder there:
+1. Create your personal skills directory if needed, then copy the **check-fix-accessibility** folder there:
 
    ```bash
    mkdir -p ~/.cursor/skills
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y ~/.cursor/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.cursor/skills/
    ```
 
 2. Restart Cursor. The skill is now available in every project.
@@ -153,7 +153,7 @@ Claude Code can use **project instructions** (e.g. `CLAUDE.md`) or a **rules dir
    ```
 
 2. Copy the skill into a rule file (e.g. `accessibility.mdc`). You can either:
-   - Paste the contents of **review-fix-a11y/SKILL.md** into the rule body, or  
+   - Paste the contents of **check-fix-accessibility/SKILL.md** into the rule body, or  
    - Keep the repo in your project and add a rule that points to the skill folder.
 
    Example `.claude/rules/accessibility.mdc`:
@@ -164,7 +164,7 @@ Claude Code can use **project instructions** (e.g. `CLAUDE.md`) or a **rules dir
    paths: "**/*.tsx","**/*.jsx","**/*.vue","**/*.html","**/*.css"
    ---
 
-   [Paste contents of review-fix-a11y/SKILL.md here, or instruct the agent to read review-fix-a11y/SKILL.md and review-fix-a11y/reference.md when working on a11y.]
+   [Paste contents of check-fix-accessibility/SKILL.md here, or instruct the agent to read check-fix-accessibility/SKILL.md and check-fix-accessibility/reference.md when working on a11y.]
    ```
 
 3. For a smaller rule, reference the files in your repo:
@@ -176,24 +176,24 @@ Claude Code can use **project instructions** (e.g. `CLAUDE.md`) or a **rules dir
    ---
 
    When working on accessibility, a11y, WCAG, screen readers, or keyboard/ARIA issues, read and follow:
-   - review-fix-a11y/SKILL.md (workflow, checklist, fix patterns)
-   - review-fix-a11y/reference.md (WCAG, ARIA, testing, native mobile)
+   - check-fix-accessibility/SKILL.md (workflow, checklist, fix patterns)
+   - check-fix-accessibility/reference.md (WCAG, ARIA, testing, native mobile)
    ```
 
 **Option B: User-level instructions**
 
-1. Copy the **review-fix-a11y** folder to your Claude config, e.g.:
+1. Copy the **check-fix-accessibility** folder to your Claude config, e.g.:
 
    ```bash
    mkdir -p ~/.claude/skills
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y ~/.claude/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.claude/skills/
    ```
 
 2. In `~/.claude/CLAUDE.md` (or your project’s `CLAUDE.md`), add a line such as:
 
    ```markdown
-   When the user asks about accessibility, a11y, WCAG, screen readers, or fixing a11y issues, use the instructions in ~/.claude/skills/review-fix-a11y/SKILL.md and reference.md.
+   When the user asks about accessibility, a11y, WCAG, screen readers, or fixing a11y issues, use the instructions in ~/.claude/skills/check-fix-accessibility/SKILL.md and reference.md.
    ```
 
 Scopes (project vs user) follow Claude Code’s hierarchy: project (`.claude/`) overrides user (`~/.claude/`).
@@ -206,22 +206,22 @@ Kiro uses **Agent Skills** in `.kiro/skills/` (workspace) or `~/.kiro/skills/` (
 
 **Option A: Workspace skill (this project)**
 
-1. In your project root, create the Kiro skills directory and copy the **review-fix-a11y** folder into it:
+1. In your project root, create the Kiro skills directory and copy the **check-fix-accessibility** folder into it:
 
    ```bash
    mkdir -p .kiro/skills
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y .kiro/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility .kiro/skills/
    ```
 
-   Or from this repo root: `cp -r review-fix-a11y .kiro/skills/`
+   Or from this repo root: `cp -r check-fix-accessibility .kiro/skills/`
 
 2. Ensure `SKILL.md` has YAML frontmatter (it already includes `name` and `description`). Kiro uses that to know when to load the skill.
 
 3. Layout:
 
    ```
-   .kiro/skills/review-fix-a11y/
+   .kiro/skills/check-fix-accessibility/
    ├── SKILL.md
    └── reference.md
    ```
@@ -230,18 +230,18 @@ Kiro uses **Agent Skills** in `.kiro/skills/` (workspace) or `~/.kiro/skills/` (
 
 **Option B: Global skill (all workspaces)**
 
-1. Copy the **review-fix-a11y** folder to Kiro’s global skills directory:
+1. Copy the **check-fix-accessibility** folder to Kiro’s global skills directory:
 
    ```bash
    mkdir -p ~/.kiro/skills
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y ~/.kiro/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.kiro/skills/
    ```
 
 2. Layout:
 
    ```
-   ~/.kiro/skills/review-fix-a11y/
+   ~/.kiro/skills/check-fix-accessibility/
    ├── SKILL.md
    └── reference.md
    ```
@@ -260,30 +260,30 @@ Codex loads skills from **`$CODEX_HOME/skills`** (default `~/.codex/skills`). Yo
 
 If you have the skill-installer skill in Codex:
 
-1. In Codex, ask: *"Install the skill from GitHub repo `YOUR_USERNAME/check-fix-accessibility`, path `review-fix-a11y`"* (so the installer uses the **review-fix-a11y** subfolder).
-2. The installer will put the skill in `$CODEX_HOME/skills/review-fix-a11y`.
+1. In Codex, ask: *"Install the skill from GitHub repo `YOUR_USERNAME/check-fix-accessibility`, path `check-fix-accessibility`"* (so the installer uses the **check-fix-accessibility** subfolder).
+2. The installer will put the skill in `$CODEX_HOME/skills/check-fix-accessibility`.
 3. Restart Codex to load the new skill.
 
 **Option B: Manual install**
 
-1. Clone this repo, then copy the **review-fix-a11y** folder into your Codex skills directory:
+1. Clone this repo, then copy the **check-fix-accessibility** folder into your Codex skills directory:
 
    ```bash
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
    mkdir -p ~/.codex/skills
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y ~/.codex/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.codex/skills/
    ```
 
    Or, if `CODEX_HOME` is set:
 
    ```bash
-   cp -r /path/to/check-fix-accessibility-repo/review-fix-a11y "$CODEX_HOME/skills/"
+   cp -r /path/to/check-fix-accessibility-repo/check-fix-accessibility "$CODEX_HOME/skills/"
    ```
 
 2. Ensure this structure:
 
    ```
-   $CODEX_HOME/skills/review-fix-a11y/
+   $CODEX_HOME/skills/check-fix-accessibility/
    ├── SKILL.md
    └── reference.md
    ```
@@ -298,18 +298,18 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 
 **Option A: Workspace (project) skill**
 
-1. In your project root, create the agent skills directory and copy the **review-fix-a11y** folder:
+1. In your project root, create the agent skills directory and copy the **check-fix-accessibility** folder:
 
    ```bash
    mkdir -p .agent/skills
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y .agent/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility .agent/skills/
    ```
 
 2. Layout:
 
    ```
-   .agent/skills/review-fix-a11y/
+   .agent/skills/check-fix-accessibility/
    ├── SKILL.md
    └── reference.md
    ```
@@ -318,12 +318,12 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 
 **Option B: Global (user-wide) skill**
 
-1. Create the global skills directory and copy the **review-fix-a11y** folder there:
+1. Create the global skills directory and copy the **check-fix-accessibility** folder there:
 
    ```bash
    mkdir -p ~/.gemini/antigravity/skills
    git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/review-fix-a11y ~/.gemini/antigravity/skills/
+   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.gemini/antigravity/skills/
    ```
 
 **Reference:** [Antigravity Skills (Google Codelabs)](https://codelabs.developers.google.com/getting-started-with-antigravity-skills), [Antigravity docs](https://antigravity.google/docs/skills).
@@ -334,11 +334,11 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 
 | Platform        | Project scope                          | User scope (global)           |
 |----------------|----------------------------------------|-------------------------------|
-| **Cursor**     | `.cursor/skills/review-fix-a11y/`      | `~/.cursor/skills/review-fix-a11y/` |
-| **Claude**     | `.claude/rules/` (e.g. `accessibility.mdc`) or reference from `CLAUDE.md` | `~/.claude/skills/review-fix-a11y/` + `CLAUDE.md` |
-| **Kiro**       | `.kiro/skills/review-fix-a11y/`        | `~/.kiro/skills/review-fix-a11y/` |
-| **Codex**      | —                                      | `$CODEX_HOME/skills/review-fix-a11y/` (default `~/.codex/skills/`) |
-| **Antigravity**| `.agent/skills/review-fix-a11y/`       | `~/.gemini/antigravity/skills/review-fix-a11y/` |
+| **Cursor**     | `.cursor/skills/check-fix-accessibility/`      | `~/.cursor/skills/check-fix-accessibility/` |
+| **Claude**     | `.claude/rules/` (e.g. `accessibility.mdc`) or reference from `CLAUDE.md` | `~/.claude/skills/check-fix-accessibility/` + `CLAUDE.md` |
+| **Kiro**       | `.kiro/skills/check-fix-accessibility/`        | `~/.kiro/skills/check-fix-accessibility/` |
+| **Codex**      | —                                      | `$CODEX_HOME/skills/check-fix-accessibility/` (default `~/.codex/skills/`) |
+| **Antigravity**| `.agent/skills/check-fix-accessibility/`       | `~/.gemini/antigravity/skills/check-fix-accessibility/` |
 
 ---
 
@@ -348,7 +348,7 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 - **Checklist**: Semantics, landmarks, headings, focus, keyboard, forms, labels, images/alt, ARIA, contrast, motion, zoom.
 - **Corner cases**: Screen readers, voice control, SPAs, modals, live regions, RTL, CAPTCHA.
 - **Fix patterns**: Custom controls, modals, expand/collapse, tabs, error messages.
-- **reference.md**: WCAG 2.2 summary, ARIA patterns, testing tools, screen reader testing, native mobile (React Native, iOS, Android) pointers. In **review-fix-a11y/reference.md**.
+- **reference.md**: WCAG 2.2 summary, ARIA patterns, testing tools, screen reader testing, native mobile (React Native, iOS, Android) pointers. In **check-fix-accessibility/reference.md**.
 
 ---
 
