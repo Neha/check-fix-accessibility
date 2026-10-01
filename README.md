@@ -396,3 +396,5 @@ Improvements and fixes are welcome. Suggested focus:
 - Clarifying setup steps for any of the five platforms.
 
 Open an issue or pull request on the GitHub repo.
+
+Pull requests are reviewed by [CodeRabbit](https://coderabbit.ai/) when the GitHub App is installed on this repository. Preferences live in [`.coderabbit.yaml`](.coderabbit.yaml): skill files and the README get an accessibility-accuracy pass, and files under `assets/` are skipped. Reply on the review thread if a comment is wrong. Installing the app is a repository setting (GitHub → Settings → GitHub Apps, or [the CodeRabbit app](https://github.com/apps/coderabbitai)); the yaml file does not install it.
