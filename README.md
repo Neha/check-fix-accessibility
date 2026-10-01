@@ -2,7 +2,7 @@
 
 A reusable **accessibility (a11y) skill** for AI coding assistants. It teaches the agent how to audit and fix front-end accessibility issues (WCAG 2.2 Level A/AA), including semantics, keyboard navigation, ARIA, forms, contrast, and screen readers—for web (React, Next.js, Vue, Angular) and with pointers for native mobile.
 
-**Skill version 1.4.0** · standard WCAG 2.2 Level A and AA · last reviewed 2026-10-01. The changelog is in [`check-fix-accessibility/SKILL.md`](check-fix-accessibility/SKILL.md#changelog). Pinned tool versions are recorded in the skill; check for newer releases before you adopt them.
+**Skill version 1.5.0** · standard WCAG 2.2 Level A and AA · last reviewed 2026-10-01. The changelog is in [`check-fix-accessibility/SKILL.md`](check-fix-accessibility/SKILL.md#changelog). Pinned tool versions are recorded in the skill; check for newer releases before you adopt them.
 
 Use this skill when you or your team work on accessibility, a11y, WCAG, screen readers, keyboard navigation, focus management, ARIA, semantic HTML, or fixing accessibility issues in HTML/React/Next.js/Vue or other front-end code.
 
@@ -64,12 +64,14 @@ check-fix-accessibility/          ← repo root
 ├── examples/mcp/                        ← optional MCP samples (not auto-loaded)
 └── check-fix-accessibility/             ← the skill (copy this folder when installing)
     ├── SKILL.md                 ← main skill (required by all platforms)
+    ├── frameworks.md           ← React, Vue, and Angular patterns
     └── reference.md            ← WCAG, ARIA, testing, native mobile
 ```
 
 | Path | Purpose |
 |------|--------|
 | **check-fix-accessibility/SKILL.md** | Main skill: workflow, checklist, fix patterns, corner cases. |
+| **check-fix-accessibility/frameworks.md** | React, Vue, and Angular: labels, buttons, modals, route focus, component tests. |
 | **check-fix-accessibility/reference.md** | Deeper reference: WCAG summary, ARIA patterns, testing tools, screen readers, native mobile. |
 | **README.md** | This file: setup for Cursor, Claude, Kiro, Codex, Google Antigravity. |
 
@@ -135,8 +137,9 @@ Cursor uses **skills** as directories with a `SKILL.md` file. You can use this a
 
    ```
    .cursor/skills/check-fix-accessibility/
-   ├── SKILL.md
-   └── reference.md
+├── SKILL.md
+├── frameworks.md
+└── reference.md
    ```
 
 3. Restart Cursor or start a new chat. The agent will use the skill when you mention accessibility, a11y, WCAG, etc.
@@ -239,8 +242,9 @@ Kiro uses **Agent Skills** in `.kiro/skills/` (workspace) or `~/.kiro/skills/` (
 
    ```
    .kiro/skills/check-fix-accessibility/
-   ├── SKILL.md
-   └── reference.md
+├── SKILL.md
+├── frameworks.md
+└── reference.md
    ```
 
 4. Restart Kiro or start a new session.
@@ -259,8 +263,9 @@ Kiro uses **Agent Skills** in `.kiro/skills/` (workspace) or `~/.kiro/skills/` (
 
    ```
    ~/.kiro/skills/check-fix-accessibility/
-   ├── SKILL.md
-   └── reference.md
+├── SKILL.md
+├── frameworks.md
+└── reference.md
    ```
 
 3. Restart Kiro. Workspace skills in `.kiro/skills/` take priority over global skills if both exist with the same name.
@@ -301,8 +306,9 @@ If you have the skill-installer skill in Codex:
 
    ```
    $CODEX_HOME/skills/check-fix-accessibility/
-   ├── SKILL.md
-   └── reference.md
+├── SKILL.md
+├── frameworks.md
+└── reference.md
    ```
 
 3. Restart Codex. The skill will be available when you work on accessibility-related tasks.
@@ -327,8 +333,9 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 
    ```
    .agent/skills/check-fix-accessibility/
-   ├── SKILL.md
-   └── reference.md
+├── SKILL.md
+├── frameworks.md
+└── reference.md
    ```
 
 3. Restart Antigravity or start a new agent session. The skill's `description` in the frontmatter is used to match user intent (e.g. "accessibility", "a11y", "WCAG").
@@ -367,7 +374,8 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 - **Corner cases**: Screen readers, voice control vs Amazon VoiceView, SPAs, modals, live regions, RTL, CAPTCHA.
 - **Fix patterns**: Custom controls, native `<dialog>`, expand/collapse, tabs, error messages. A worked report is in [Providing feedback](check-fix-accessibility/SKILL.md#providing-feedback).
 - **reference.md**: WCAG 2.2 summary (including the new 2.2 criteria), checklist rationale, target size, ARIA patterns, React focus and routing, screen reader testing, native mobile. In **check-fix-accessibility/reference.md**.
-- **Version**: 1.4.0, reviewed 2026-10-01 against WCAG 2.2 A/AA. [Changelog](check-fix-accessibility/SKILL.md#changelog).
+- **frameworks.md**: React (`useId`, `createPortal`, React Router, Next.js), Vue (`useId`, `<Teleport>`, Vue Router), Angular (`cdkTrapFocus`, CDK dialog, `NavigationEnd`), plus component axe tests. In **check-fix-accessibility/frameworks.md**.
+- **Version**: 1.5.0, reviewed 2026-10-01 against WCAG 2.2 A/AA. [Changelog](check-fix-accessibility/SKILL.md#changelog).
 
 ---
 
