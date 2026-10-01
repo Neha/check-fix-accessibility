@@ -50,10 +50,10 @@ The skill checklist stays to one line. The detail that used to sit on those line
 ## ARIA patterns (high level)
 
 - **Dialog**: `role="dialog"`, `aria-modal="true"`, `aria-labelledby` (and optional `aria-describedby`). Trap focus; Escape closes; focus return.
-- **Menu / menubar**: `role="menu"` / `role="menubar"`, `role="menuitem"`; arrow keys and Enter/Space; `aria-expanded` on submenus.
+- **Menu / menubar**: `role="menu"` / `role="menubar"`, `role="menuitem"`; arrow keys and Enter/Space; `aria-expanded` on submenus. This is an application menu of actions (a format menu, a context menu). A site header is `<nav>` and links. `role="menu"` on those links takes them out of the tab order.
 - **Tabs**: `role="tablist"`, `role="tab"` (`aria-selected`, `aria-controls`), `role="tabpanel"` (`id`); arrow keys + Enter/Space.
 - **Tree**: `role="tree"`, `role="treeitem"` (`aria-expanded`, `aria-level`); arrow keys for expand/collapse and move.
-- **Combobox**: `role="combobox"`, `aria-expanded`, `aria-controls` (listbox), `aria-activedescendant` for current option; listbox with `role="option"`; arrow keys + Enter.
+- **Combobox**: `role="combobox"` on the input, `aria-expanded`, `aria-controls` pointing at `role="listbox"`, `role="option"` children, and `aria-activedescendant` for the active option. Arrow keys move that option, Enter selects it, Escape closes the list. The input keeps DOM focus. Do not make every option its own tab stop.
 
 Full patterns: [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/).
 
@@ -88,12 +88,12 @@ Check these when they match the UI you are fixing. Say which ones you checked an
 
 ## Testing tools
 
-Pin exact versions (install as `devDependencies` + lockfile) rather than relying on `npx <latest>`, so results are reproducible. Versions below are known-good as of the "Last reviewed" date in SKILL.md; bump them deliberately.
+Pin exact versions (install as `devDependencies` + lockfile). Pins were checked on 2026-10-01. They match the snippets in this skill. A newer major is named when it would change the snippet.
 
 - **Lighthouse**: Chrome DevTools → Lighthouse → Accessibility. (Version tracks Chrome; note it in reports.)
-- **axe**: `npm i -D @axe-core/cli@4.12.1 axe-core@4.12.1`; `npx axe <url>` or use the axe DevTools extension.
-- **pa11y**: `npm i -D pa11y@9.1.1`; `npx pa11y <url>`.
-- **ESLint**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.5.0` (Vue).
+- **axe**: `npm i -D @axe-core/cli@4.13.0 axe-core@4.13.0`; `npx axe <url>` or use the axe DevTools extension.
+- **pa11y**: `npm i -D pa11y@10.0.0`; `npx pa11y <url>`. pa11y 10 needs Node `^22.13.0` or `>=24`. pa11y 9.1.1 is the same command on older Node.
+- **ESLint**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.6.0` (Vue).
 - **Contrast**: Chrome DevTools Inspect → Accessibility pane; or WebAIM Contrast Checker.
 
 ### Copy-paste audit scripts
@@ -106,9 +106,9 @@ There is no runner in this skill repo. Add this to the app you are auditing, ins
     "a11y:axe": "axe http://127.0.0.1:3000 --exit",
     "a11y:pa11y": "pa11y http://127.0.0.1:3000"
   },
-  "devDependencies": {
-    "@axe-core/cli": "4.12.1",
-    "pa11y": "9.1.1"
+    "devDependencies": {
+    "@axe-core/cli": "4.13.0",
+    "pa11y": "10.0.0"
   }
 }
 ```
@@ -117,9 +117,9 @@ Change the URL to the page you are fixing. Component tests in [frameworks.md](fr
 
 ## Automated testing in React
 
-Vue and Angular axe examples are in [frameworks.md](frameworks.md#component-tests). Static linting (`eslint-plugin-jsx-a11y`) only catches a subset of issues; add runtime checks against the rendered DOM. Pin versions (versions below are known-good as of the "Last reviewed" date in SKILL.md).
+Vue and Angular axe examples are in [frameworks.md](frameworks.md#component-tests). Static linting (`eslint-plugin-jsx-a11y`) only catches a subset of issues; add runtime checks against the rendered DOM. Pins checked 2026-10-01.
 
-- **Query by accessibility, not by test id**: Testing Library's role/name queries double as a11y assertions — if `getByRole('button', { name: 'Save' })` can't find it, neither can assistive tech. Prefer `getByRole` / `getByLabelText` over `getByTestId`. `npm i -D @testing-library/react@16.3.2 @testing-library/jest-dom@6.9.1`.
+- **Query by accessibility, not by test id**: Testing Library's role/name queries double as a11y assertions — if `getByRole('button', { name: 'Save' })` can't find it, neither can assistive tech. Prefer `getByRole` / `getByLabelText` over `getByTestId`. `npm i -D @testing-library/react@16.3.3 @testing-library/jest-dom@6.9.1`. jest-dom 7.0.1 peers with Vitest only, so this Jest example stays on 6.9.1.
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -131,11 +131,13 @@ test('save button has an accessible name', () => {
 });
 ```
 
-- **Component-level axe (Jest)**: `npm i -D jest-axe@10.0.0`. Assert zero violations on rendered output.
+- **Component-level axe (Jest)**: `npm i -D jest-axe@11.0.0`. jest-axe 11 depends on axe-core 4.12.1; the CLI pin above is 4.13.0. Register the matcher or `toHaveNoViolations` is not a function and the test is deleted instead of fixed.
 
 ```tsx
 import { render } from '@testing-library/react';
-import { axe } from 'jest-axe';
+import { axe, toHaveNoViolations } from 'jest-axe';
+
+expect.extend(toHaveNoViolations);
 
 test('form has no a11y violations', async () => {
   const { container } = render(<SignupForm />);
@@ -143,28 +145,25 @@ test('form has no a11y violations', async () => {
 });
 ```
 
-- **Component-level axe (Vitest)**: use `vitest-axe@0.1.0` (same API as `jest-axe`, wired for Vitest's `expect`).
+- **Component-level axe (Vitest)**: `vitest-axe@0.1.0`. In the Vitest setup file: `import * as matchers from 'vitest-axe/matchers'` and `expect.extend(matchers)`. TypeScript setups import `vitest-axe/extend-expect` once so the matcher is on the types.
 - **End-to-end axe**: run axe against the real running app in E2E, where routing, portals, and focus behave realistically.
-  - Cypress: `npm i -D cypress-axe@1.7.0 axe-core@4.12.1` → `cy.injectAxe()` then `cy.checkA11y()`.
-  - Playwright: `npm i -D @axe-core/playwright@4.12.1` → `new AxeBuilder({ page }).analyze()` and assert `results.violations` is empty.
+  - Cypress: `npm i -D cypress-axe@1.7.0 axe-core@4.13.0` → `cy.injectAxe()` then `cy.checkA11y()`.
+  - Playwright: `npm i -D @axe-core/playwright@4.13.0` → `new AxeBuilder({ page }).analyze()` and assert `results.violations` is empty.
 - **Scope caveat**: axe finds ~30–50% of issues. Keep manual keyboard + screen-reader checks for focus order, live-region timing, and semantics that automation can't judge.
 
 ## React focus & routing
 
-Vue Router and Angular `NavigationEnd` snippets are in [frameworks.md](frameworks.md#vue-routing). Generic SPA advice ("move focus / announce on route change") needs concrete React patterns:
+Route-change focus is only in [frameworks.md](frameworks.md#react-routing). Do not add a second snippet here.
 
-- **Focus on mount / step change**: use a `ref` + `useEffect` to move focus (e.g. to a heading or first field). Give the target `tabIndex={-1}` so it's programmatically focusable without joining the tab order.
+Inside one page (a wizard step, not a URL change), focus a heading when that step's key changes. Give it `tabIndex={-1}`. Skip the focus on the first render, or it steals focus on load.
 
-```tsx
-const headingRef = useRef<HTMLHeadingElement>(null);
-useEffect(() => { headingRef.current?.focus(); }, [routeKey]);
-return <h1 ref={headingRef} tabIndex={-1}>{title}</h1>;
-```
+### Focus trap libraries
 
-- **Route changes (react-router `7.18.1`)**: client navigation doesn't reset focus or update the title like a full page load. On each navigation, update `document.title` and move focus to `<main>`/the page `<h1>` (or announce via a persistent `aria-live="polite"` region). Trigger off `useLocation()`'s `pathname`.
-- **Focus trapping (modals/dialogs/menus)**: don't hand-roll it. Use `react-focus-lock@2.13.7` or `focus-trap-react@12.0.3` to trap focus, restore focus to the trigger on close, and handle Escape.
-- **Accessible primitives**: prefer libraries that ship correct roles, keyboard interaction, and focus management over building widgets from `div`s: `react-aria@3.50.0` (React Aria / React Aria Components), Radix UI, or Headless UI (`@headlessui/react@2.2.10`). You still supply accessible names and verify behavior, but you inherit the hard parts (arrow-key nav, `aria-*` wiring, focus return).
-- **Don't fight the primitive**: when using the libraries above, avoid re-adding `role`/`tabindex`/`aria-*` they already manage — duplicating them causes double or wrong announcements.
+Don't hand-roll a trap. Pins checked 2026-10-01:
+
+- `react-focus-lock@2.13.7` or `focus-trap-react@12.0.3` for a custom dialog. Prefer `<dialog>` and `showModal()` when you can.
+- Primitives that already do roles, keyboard, and focus return: `react-aria@3.52.1`, Radix UI, `@headlessui/react@2.2.10`.
+- Don't add `role`, `tabindex`, or `aria-*` that the primitive already sets. Duplicating them announces the control twice.
 
 ## Screen reader testing (manual)
 
@@ -214,7 +213,14 @@ Pass when every control in the flow is reachable, the name matches the visible t
 
 ## Native mobile (brief)
 
-- **React Native**: Use `accessibilityLabel`, `accessibilityHint`, `accessibilityRole` (e.g. `button`, `link`, `header`), `accessibilityState` (e.g. `{ disabled, selected, expanded }`), and `accessibilityLiveRegion`. Test with TalkBack (Android) and VoiceOver (iOS).
-- **iOS (Swift/UIKit)**: `accessibilityLabel`, `accessibilityHint`, `accessibilityTraits`, `isAccessibilityElement`. Use `UIAccessibility` APIs for custom controls and announcements.
-- **Android**: `contentDescription`, `android:importantForAccessibility`, `AccessibilityNodeInfo` for custom views. Use `announceForAccessibility()` for live announcements.
-- **Guidelines**: iOS HIG (Accessibility), Android Accessibility guidelines, WCAG applied to mobile where applicable.
+Web patterns above do not transfer as HTML. The goal is the same: name, role, state, focus order, and text that scales.
+
+- **React Native**
+  - Name and role: `accessibilityLabel` is the purpose, not the control type. Set `accessibilityRole` and `accessibilityState`.
+  - Decorative icons: `accessible={false}` on iOS and `importantForAccessibility="no"` on Android. `accessibilityElementsHidden` hides a whole group.
+  - Modal: `accessibilityViewIsModal` on the iOS modal so VoiceOver cannot reach the screen behind it. On Android, set `importantForAccessibility="no-hide-descendants"` on the content the dialog covers.
+  - Dynamic type: leave `allowFontScaling` at its default (`true`). Don't fix a height that clips when the system font grows. Test at the largest system size.
+  - Test with VoiceOver (iOS) and TalkBack (Android).
+- **iOS (Swift/UIKit)**: `accessibilityLabel`, `accessibilityTraits`, `isAccessibilityElement`. Set `accessibilityViewIsModal = true` on a modal. A decorative image is not an accessibility element.
+- **Android**: `contentDescription` on meaningful images. `android:importantForAccessibility="no"` on decorative ones. `importantForAccessibility="noHideDescendants"` on the background while a dialog is open. Text size in `sp`, not `dp` or `px`.
+- **Guidelines**: iOS HIG (Accessibility) and the Android accessibility guidance. WCAG describes the goal. The APIs above are how a native app meets it.

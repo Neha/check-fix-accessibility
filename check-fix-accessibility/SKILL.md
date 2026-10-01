@@ -1,7 +1,7 @@
 ---
 name: check-fix-accessibility
 description: Check and fix accessibility (a11y) on front-end projects (web and mobile web), including Next.js, React, Vue, Angular. Use when the user asks about accessibility, a11y, WCAG, screen readers, voice control, Voice View, keyboard navigation, focus management, ARIA, semantic HTML, color contrast, or fixing accessibility issues in HTML, React, Next.js, Vue, or other front-end code. For native mobile apps (React Native, iOS, Android), see reference; patterns differ.
-version: 1.7.0
+version: 1.8.0
 standard: WCAG 2.2 (Level A & AA)
 last_reviewed: 2026-10-01
 ---
@@ -28,12 +28,12 @@ Systematically audit and fix accessibility issues in any front-end project. Prio
 
 Use at least one automated tool; combine with manual review for important flows.
 
-**Pin tool versions for reproducibility.** Prefer installing tools as `devDependencies` with an exact version (recorded in `package.json` + lockfile) over `npx <latest>`, so audit results don't drift between runs or machines. If you do use `npx`, pin the version (e.g. `npx pa11y@9.1.1`). Versions below are known-good as of the "Last reviewed" date in the front matter; check for newer releases and update deliberately.
+**Pin tool versions for reproducibility.** Install tools as `devDependencies` with an exact version (in `package.json` and the lockfile). Pins below were checked on 2026-10-01 against the snippets in this skill. They are not a claim that a newer release is wrong. A newer major is named when it would change the snippet.
 
-- **Lighthouse** (Chrome DevTools): Run Accessibility audit. Good for full-page snapshot. (Bundled with Chrome; note the Chrome/Lighthouse version in reports.)
-- **axe DevTools** (browser extension or `@axe-core/cli`, `axe-core` in tests): Run on the page or component. Report and fix by rule ID. Pin: `npm i -D @axe-core/cli@4.12.1 axe-core@4.12.1`.
-- **pa11y** (CLI): `npm i -D pa11y@9.1.1`, then `npx pa11y <url>` (or add an npm script) for terminal reports.
-- **ESLint + plugins**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.5.0` (Vue). Install pinned as `devDependencies`, add to CI, and fix reported rules.
+- **Lighthouse** (Chrome DevTools): Run Accessibility audit. Good for a full-page snapshot. Note the Chrome/Lighthouse version in the report.
+- **axe DevTools** (browser extension or `@axe-core/cli`, `axe-core` in tests): Report and fix by rule ID. Pin: `npm i -D @axe-core/cli@4.13.0 axe-core@4.13.0`.
+- **pa11y** (CLI): `npm i -D pa11y@10.0.0`, then `npx pa11y <url>`. pa11y 10 needs Node `^22.13.0` or `>=24`. The command is the same as 9.1.1, which still runs on older Node.
+- **ESLint + plugins**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.6.0` (Vue). Add them to CI and fix the reported rules.
 
 When fixing, use the tool’s rule ID (e.g. `button-name`, `label`, `color-contrast`) to look up the exact requirement and apply the right fix.
 
@@ -48,7 +48,7 @@ Copy and use as a progress list. Not exhaustive; expand from audit results.
 - [ ] **Page language** (3.1.1 A): Set `lang` on `<html>`.
 - [ ] **Page title**: One `<title>` per page, descriptive and unique.
 - [ ] **Landmarks**: Use `<main>`, `<nav>`, `<header>`, `<footer>`, `<aside>` (or ARIA `role="main"` etc. only when you can’t use the element). One `<main>` per page.
-- [ ] **Headings** (2.4.6 AA): Use headings for structure, in order. Skipping a level is a best-practice issue, not an automatic AA failure.
+- [ ] **Headings** (2.4.6 AA): The heading text describes the section. Skipping a level is a best-practice issue, not what 2.4.6 checks, and not an automatic AA failure.
 - [ ] **Lists**: Use `<ul>`/`<ol>`/`<li>` for list content; don’t use only divs + CSS.
 - [ ] **Buttons vs links**: Use `<button>` for actions (submit, open modal, toggle). Use `<a href="...">` for navigation. Don’t use `<div>` or `<span>` for buttons or links.
 - [ ] **Consistent help** (3.2.6 AA): Keep help in the same relative order on every page. See [rationale](reference.md#checklist-rationale).
@@ -69,7 +69,7 @@ Copy and use as a progress list. Not exhaustive; expand from audit results.
 
 - [ ] **Labels**: Every control has a `<label>` (`for`/`id` or wrapping) or `aria-label`/`aria-labelledby`. Placeholder is not a label.
 - [ ] **Label in name** (2.5.3 AA): The accessible name includes the visible text. `aria-label` replaces the contents, so don’t use it on a control that already shows a label.
-- [ ] **Errors**: Point at the message with `aria-describedby`, set `aria-invalid="true"`, and put the message in the DOM while it applies.
+- [ ] **Errors** (3.3.1 A): The error is visible text, not only a color or a live region. Point at it with `aria-describedby`, set `aria-invalid="true"`, and keep it in the DOM while it applies.
 - [ ] **Required/optional**: Mark required fields in text and with `aria-required` or the `required` attribute.
 - [ ] **Grouping**: Use `<fieldset>` and `<legend>` for radio and checkbox groups.
 - [ ] **Unavailable controls**: `disabled` removes the control from tab order. Use `aria-disabled="true"` when the user still needs to focus it and hear why.
@@ -108,7 +108,8 @@ Copy and use as a progress list. Not exhaustive; expand from audit results.
 
 ### Responsive and zoom
 
-- [ ] **Reflow** (1.4.10 AA): At 400% zoom, no two-dimensional scrolling except for content that needs it (maps, tables, diagrams).
+- [ ] **Resize text** (1.4.4 AA): Text can grow to 200% without clipping. Don't set `user-scalable=no`, and don't lock type to `px` if that cuts it off.
+- [ ] **Reflow** (1.4.10 AA): At 400% zoom, no two-dimensional scrolling except for content that needs it (maps, tables, diagrams). This is separate from 1.4.4.
 - [ ] **Text spacing** (1.4.12 AA): User spacing overrides don’t clip content. See [rationale](reference.md#checklist-rationale).
 - [ ] **Touch targets** (2.5.8 AA): At least 24×24 CSS px, or spacing that meets the criterion. 44×44 is AAA / platform practice, not the AA minimum. See [reference.md](reference.md#target-size-touchpointer).
 
@@ -121,7 +122,7 @@ Handle these explicitly; they are often missed by automated tools.
 - **Screen-reader-only text**: When visible label would be redundant (e.g. icon-only button), add a visible-for-SR label (e.g. `.sr-only` / `aria-label`) so the control has a clear name. Don't rely on `title` alone for critical labels.
 - **Tables**: Data tables use `<table>`, `<th>` with `scope` or `headers`, and `<caption>` or `aria-labelledby` so screen reader users can navigate by cell. Avoid tables for layout.
 - **Iframes**: Every `<iframe>` needs a descriptive `title` (or `aria-label`) so SR users know what the region is.
-- **Link purpose**: Link text must make sense out of context. Avoid "Click here" or "Read more" alone; use descriptive text or `aria-label` that includes context.
+- **Link purpose** (2.4.4 A): The purpose is clear from the link text together with its context (the sentence, list item, or cell). "Read more" passes A/AA when that context names the destination. Link text that must stand alone is 2.4.9 AAA, in [reference.md](reference.md#when-the-user-asks-for-aaa).
 - **Duplicate announcements**: Avoid announcing the same thing twice (e.g. both `aria-label` and visible text saying the same; multiple live regions for one update). Use one clear source of truth.
 - **Language of parts**: Use `lang` on an element when its content is in a different language than the page (e.g. `<span lang="fr">`), so SR uses the correct pronunciation.
 - **Announcement order**: Ensure live regions and focus moves don't create confusing order (e.g. result announced before "Loading" is removed). Use `aria-busy` during loading and clear it when content is ready.
@@ -135,7 +136,7 @@ These are different tools. Don’t treat VoiceView as speech input.
 
 ### Single-page apps (SPA) and dynamic content
 
-- **Route / view changes**: On navigation, update `<title>` and move focus to main content or announce the change (e.g. `aria-live="polite"` region or focus to `<main>`/heading) so SR users know the page changed. The skip link and `<main>` are the same target. React Router, Next.js, Vue Router, and Angular: [frameworks.md](frameworks.md#react-routing). React focus-trap libraries: [reference.md](reference.md#react-focus--routing).
+- **Route / view changes**: On navigation, update `<title>` and move focus to main content or announce the change (e.g. `aria-live="polite"` region or focus to `<main>`/heading) so SR users know the page changed. The skip link and `<main>` are the same target. React Router, Next.js, Vue Router, and Angular: [frameworks.md](frameworks.md#react-routing). React focus-trap libraries: [reference.md](reference.md#focus-trap-libraries).
 - **Loading states**: Use `aria-busy="true"` on the loading container and set to `false` when done. Optionally use a live region to announce "Loading…" and then the result.
 - **Hidden but focusable**: Content that is hidden (e.g. `display: none`, `hidden`, inactive tab panel) must not contain focusable elements, or those elements must be removed from the accessibility tree (e.g. `aria-hidden="true"` on container, or `inert` where supported). Otherwise keyboard/SR users can focus "invisible" elements.
 
@@ -149,7 +150,7 @@ These are different tools. Don’t treat VoiceView as speech input.
 ## Fix patterns (concise)
 
 - **Custom control**: Use the native element. If you can’t, add `role`, `tabindex="0"` (or `-1` when script manages focus), an accessible name, and Enter/Space handling.
-- **Modal**: Prefer `<dialog>` opened with `showModal()` (focus trap and `aria-modal` come with it). A custom dialog needs `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, focus moved in, focus trapped, Escape to close, and focus returned to the trigger.
+- **Modal**: Prefer `<dialog>` opened with `showModal()`. In current browsers that traps focus. It does not promise `aria-modal`; give the dialog `aria-labelledby`. A custom dialog needs `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, focus moved in, focus trapped, Escape to close, and focus returned to the trigger.
 - **Expand/collapse**: `aria-expanded` and `aria-controls` on trigger; `id` on panel; toggle on Enter/Space.
 - **Tabs**: `role="tablist"`, `role="tab"` (with `aria-selected`, `aria-controls`), `role="tabpanel"` (with `id`); arrow keys switch tabs; activate on Enter/Space.
 - **Error message**: `aria-describedby="id-of-error"` on control, `aria-invalid="true"` when invalid; ensure error element has `id` and is in DOM when invalid.
@@ -180,6 +181,7 @@ For detailed WCAG criteria, ARIA patterns, and component examples, see [referenc
 
 ## Changelog
 
+- **1.8.0** (2026-10-01): Rechecked tool pins and stopped calling the July pins current. axe CLI and axe-core are 4.13.0, the Vue ESLint plugin is 2.6.0, pa11y is 10.0.0 (Node 22.13+), jest-axe is 11.0.0. `@testing-library/jest-dom` stays on 6.9.1 because 7.0.1 peers with Vitest only. Route focus is one `<main>` in the app shell and skips the first load. Axe examples call `expect.extend`. Link purpose in context is 2.4.4 A; out-of-context link text stays AAA. Headings 2.4.6 is the description, not the outline. Added 1.4.4 resize text, 3.3.1 visible errors, a combobox pattern, a warning that site navigation is not `role="menu"`, and native modal, decorative-image, and dynamic-type notes. `showModal()` is no longer described as setting `aria-modal`.
 - **1.7.0** (2026-10-01): Added an opt-in WCAG AAA section (contrast 7:1, focus not obscured enhanced, focus appearance, 44×44 targets, link purpose from link text alone, reduced motion, accessible authentication enhanced). A and AA stay the default. Added a copy-paste `a11y:axe` / `a11y:pa11y` npm script snippet; this repo does not ship a runner.
 - **1.6.0** (2026-10-01): Replaced the one-line screen-reader note with a pass/fail procedure for NVDA, JAWS, VoiceOver, TalkBack, and Amazon VoiceView, including the gestures that move and activate. VoiceView stays a screen reader; Samsung Voice Assistant is named so the two are not swapped. The visually hidden CSS snippet now actually hides the text.
 - **1.5.0** (2026-10-01): Added `frameworks.md` with React, Vue, and Angular patterns for labels and ids, native buttons, modals (`createPortal`, `<Teleport>`, `cdkTrapFocus` / CDK dialog), and focus on route change (React Router, Next.js, Vue Router, Angular `NavigationEnd`). Component axe tests for Vue and Angular sit next to the existing React ones. Shared anti-patterns stay in this file.
