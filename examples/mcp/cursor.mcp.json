@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "a11y-mcp": {
+      "url": "https://a11y-mcp.withjavascript.com/sse"
+    }
+  }
+}

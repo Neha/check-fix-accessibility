@@ -2,6 +2,8 @@
 
 A reusable **accessibility (a11y) skill** for AI coding assistants. It teaches the agent how to audit and fix front-end accessibility issues (WCAG 2.2 Level A/AA), including semantics, keyboard navigation, ARIA, forms, contrast, and screen readers—for web (React, Next.js, Vue, Angular) and with pointers for native mobile.
 
+**Skill version 1.4.0** · standard WCAG 2.2 Level A and AA · last reviewed 2026-10-01. The changelog is in [`check-fix-accessibility/SKILL.md`](check-fix-accessibility/SKILL.md#changelog). Pinned tool versions are recorded in the skill; check for newer releases before you adopt them.
+
 Use this skill when you or your team work on accessibility, a11y, WCAG, screen readers, keyboard navigation, focus management, ARIA, semantic HTML, or fixing accessibility issues in HTML/React/Next.js/Vue or other front-end code.
 
 ![Check and Fix Accessibility — AI skill for auditing and fixing a11y issues](assets/social-card-dark.png)
@@ -9,6 +11,14 @@ Use this skill when you or your team work on accessibility, a11y, WCAG, screen r
 ---
 
 ## Quick start
+
+You can install with the [skills CLI](https://github.com/vercel-labs/skills), which asks which agent to target. Project scope is the usual choice for a team:
+
+```bash
+npx skills add Neha/check-fix-accessibility
+```
+
+Or install by hand:
 
 1. **Clone this repo** (replace `YOUR_USERNAME` with the GitHub org or user):
 
@@ -36,7 +46,7 @@ Use this skill when you or your team work on accessibility, a11y, WCAG, screen r
 
 3. **Restart** your assistant (or start a new session). Ask about accessibility, a11y, or WCAG—the skill should load automatically.
 
-4. **Optional — MCP:** add the [a11y-mcp server](#mcp-a11y-mcp-configuration) for live accessibility tooling in supported assistants.
+4. **Optional — MCP:** a third-party server. Read the [caveat and exact config paths](#mcp-a11y-mcp-configuration) before you enable it. The skill works without it.
 
 **Detailed steps** (rules, skill-installer, layouts): see [Setup by platform](#setup-by-platform) below.
 
@@ -51,6 +61,7 @@ check-fix-accessibility/          ← repo root
 ├── LICENSE
 ├── README.md
 ├── .gitignore
+├── examples/mcp/                        ← optional MCP samples (not auto-loaded)
 └── check-fix-accessibility/             ← the skill (copy this folder when installing)
     ├── SKILL.md                 ← main skill (required by all platforms)
     └── reference.md            ← WCAG, ARIA, testing, native mobile
@@ -68,7 +79,19 @@ When installing, use the **check-fix-accessibility** folder so your tool sees a 
 
 ## MCP (a11y-mcp) configuration
 
-If your assistant supports MCP servers, add this MCP server:
+Optional, and off unless you turn it on. The endpoint below is a **third-party hosted server** (`a11y-mcp.withjavascript.com`). Content the assistant sends to that server leaves your machine. The server can also go offline or change without notice. Vet it before you enable it, or skip MCP and use the skill on its own. This repo does not ship a live MCP config, so cloning it does not connect you.
+
+Merge the server into the `mcpServers` object you already have. Don’t replace the whole file.
+
+| Assistant | Project file | User file | Notes |
+|-----------|--------------|-----------|--------|
+| **Cursor** | `.cursor/mcp.json` | `~/.cursor/mcp.json` | Project wins when the same server name is in both. Cursor does not read MCP from `.vscode/settings.json`. |
+| **Claude Code** | `.mcp.json` (repo root) | `~/.claude.json` (`mcpServers`) | Not `~/.claude/settings.json`. Prefer `claude mcp add`. |
+| **Codex** | `.codex/config.toml` (trusted projects) | `~/.codex/config.toml` | TOML key is `mcp_servers`, not `mcpServers`. `url` is Streamable HTTP. This server publishes legacy SSE (`/sse`), which Codex does not treat as that `url`. Don’t paste it in and assume it connects. |
+| **Kiro** | `.kiro/settings/mcp.json` | `~/.kiro/settings/mcp.json` | Workspace overrides user. |
+| **Antigravity** | `.agents/mcp_config.json` | `~/.gemini/config/mcp_config.json` | Remote servers use `serverUrl`, not `url`. IDE: agent panel → MCP Servers → View raw config. |
+
+Cursor, Claude Code, and Kiro share this shape. Copy it from [`examples/mcp/cursor.mcp.json`](examples/mcp/cursor.mcp.json) into the file for your tool:
 
 ```json
 {
@@ -80,15 +103,9 @@ If your assistant supports MCP servers, add this MCP server:
 }
 ```
 
-Where to put it depends on the tool:
+Antigravity uses `serverUrl` instead of `url`. See [`examples/mcp/antigravity.mcp_config.json`](examples/mcp/antigravity.mcp_config.json).
 
-- **Cursor**: add to Cursor settings under the `mcpServers` section (User or Workspace settings).
-- **Claude Code**: add to `~/.claude/settings.json` (or your project’s `.claude/settings.json` if you keep project settings).
-- **Codex**: add to your Codex settings JSON (commonly under `~/.codex/`), under `mcpServers`.
-- **Kiro**: add to Kiro’s settings/config (project or user), under `mcpServers` if supported by your version.
-- **Google Antigravity**: add to Antigravity’s settings where MCP servers are configured (global or workspace).
-
-If you already have other MCP servers configured, **merge** the `a11y-mcp` entry into your existing `"mcpServers"` object (don’t overwrite the whole file).
+The heading anchor for this section is [`#mcp-a11y-mcp-configuration`](#mcp-a11y-mcp-configuration).
 
 ---
 
@@ -344,11 +361,13 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 
 ## Skill contents (summary)
 
-- **Audit**: Use Lighthouse, axe, pa11y, ESLint a11y plugins.
-- **Checklist**: Semantics, landmarks, headings, focus, keyboard, forms, labels, images/alt, ARIA, contrast, motion, zoom.
-- **Corner cases**: Screen readers, voice control, SPAs, modals, live regions, RTL, CAPTCHA.
-- **Fix patterns**: Custom controls, modals, expand/collapse, tabs, error messages.
-- **reference.md**: WCAG 2.2 summary, ARIA patterns, testing tools, screen reader testing, native mobile (React Native, iOS, Android) pointers. In **check-fix-accessibility/reference.md**.
+- **Audit**: Lighthouse, axe, pa11y, and pinned ESLint plugins (`eslint-plugin-jsx-a11y`, `eslint-plugin-vuejs-accessibility`).
+- **React tests**: jest-axe / vitest-axe, Testing Library role queries, cypress-axe, `@axe-core/playwright`. See [Automated testing in React](check-fix-accessibility/reference.md#automated-testing-in-react).
+- **Checklist**: Semantics, landmarks, headings, focus, keyboard, forms, labels, images, ARIA, contrast, motion, zoom, plus WCAG 2.2 AA items (2.4.11 focus not obscured, 2.5.7 dragging, 2.5.8 target size, 3.2.6 consistent help, 3.3.7 redundant entry, 3.3.8 accessible authentication) and commonly missed 2.1 criteria (1.3.5 autocomplete, 1.4.12 text spacing, 1.4.13 hover/focus content, 2.1.4 character shortcuts, 2.5.3 label in name).
+- **Corner cases**: Screen readers, voice control vs Amazon VoiceView, SPAs, modals, live regions, RTL, CAPTCHA.
+- **Fix patterns**: Custom controls, native `<dialog>`, expand/collapse, tabs, error messages. A worked report is in [Providing feedback](check-fix-accessibility/SKILL.md#providing-feedback).
+- **reference.md**: WCAG 2.2 summary (including the new 2.2 criteria), checklist rationale, target size, ARIA patterns, React focus and routing, screen reader testing, native mobile. In **check-fix-accessibility/reference.md**.
+- **Version**: 1.4.0, reviewed 2026-10-01 against WCAG 2.2 A/AA. [Changelog](check-fix-accessibility/SKILL.md#changelog).
 
 ---
 

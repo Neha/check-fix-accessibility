@@ -1,9 +1,9 @@
 ---
 name: check-fix-accessibility
 description: Check and fix accessibility (a11y) on front-end projects (web and mobile web), including Next.js, React, Vue, Angular. Use when the user asks about accessibility, a11y, WCAG, screen readers, voice control, Voice View, keyboard navigation, focus management, ARIA, semantic HTML, color contrast, or fixing accessibility issues in HTML, React, Next.js, Vue, or other front-end code. For native mobile apps (React Native, iOS, Android), see reference; patterns differ.
-version: 1.3.0
+version: 1.4.0
 standard: WCAG 2.2 (Level A & AA)
-last_reviewed: 2026-07-05
+last_reviewed: 2026-10-01
 ---
 
 # Check and Fix Front-End Accessibility
@@ -45,33 +45,38 @@ Copy and use as a progress list. Not exhaustive; expand from audit results.
 
 ### Semantics and structure
 
+- [ ] **Page language** (3.1.1 A): Set `lang` on `<html>`.
 - [ ] **Page title**: One `<title>` per page, descriptive and unique.
 - [ ] **Landmarks**: Use `<main>`, `<nav>`, `<header>`, `<footer>`, `<aside>` (or ARIA `role="main"` etc. only when you can’t use the element). One `<main>` per page.
-- [ ] **Headings**: Logical order (`h1` → `h2` → `h3`), no skips. Use for structure, not just styling.
+- [ ] **Headings** (2.4.6 AA): Use headings for structure, in order. Skipping a level is a best-practice issue, not an automatic AA failure.
 - [ ] **Lists**: Use `<ul>`/`<ol>`/`<li>` for list content; don’t use only divs + CSS.
-- [ ] **Buttons vs links**: Use `<button>` for actions (submit, open modal, toggle). Use `<a href="...">` for navigation. Don’t use `<div>` or `<span>` for buttons/links without making them focusable and exposing role and name.
-- [ ] **Consistent help** (WCAG 2.2 3.2.6 AA): If help mechanisms exist (contact link, chat, help page, self-help), keep them in the same relative order/location across pages so users can find them predictably.
+- [ ] **Buttons vs links**: Use `<button>` for actions (submit, open modal, toggle). Use `<a href="...">` for navigation. Don’t use `<div>` or `<span>` for buttons or links.
+- [ ] **Consistent help** (3.2.6 AA): Keep help in the same relative order on every page. See [rationale](reference.md#checklist-rationale).
 
 ### Focus and keyboard
 
-- [ ] **Focus visible**: All interactive elements show a visible focus indicator (outline/box-shadow). Never remove focus outline without replacing it with a clear custom style.
-- [ ] **Tab order**: DOM order matches visual/logical order, or use `tabIndex` and/or `aria-flowto` only when necessary and documented.
-- [ ] **Keyboard operable**: Every mouse action has a keyboard path (click → Enter/Space; hover reveals → focus reveals or separate keyboard trigger).
-- [ ] **Focus trapping**: Modals/dialogs trap focus inside until closed; focus returns to trigger on close.
-- [ ] **Skip link**: Provide "Skip to main content" (or equivalent) for repeated nav; ensure it’s visible on focus and moves focus to main content.
-- [ ] **Focus not obscured** (WCAG 2.2 2.4.11 AA): When an element receives focus, it must not be entirely hidden by sticky headers/footers, cookie banners, or other overlays. Add scroll-margin or offset so the focused element stays visible.
-- [ ] **Character key shortcuts** (WCAG 2.1.4 AA): If single-character key shortcuts exist, let users turn them off, remap them, or make them active only on focus — so speech input and accidental keypresses don't trigger them.
-- [ ] **Dragging alternative** (WCAG 2.2 2.5.7 AA): Any drag-based action (sliders, reordering, drag-and-drop) has a single-pointer alternative (e.g. tap/click buttons, input field) that doesn't require dragging.
+- [ ] **Focus visible** (2.4.7 AA): Every interactive element has a visible focus indicator. Don’t remove the outline without a replacement.
+- [ ] **Tab order** (2.4.3 A): DOM order matches visual order. Don’t use a positive `tabindex`. There is no `aria-flowto` attribute.
+- [ ] **No keyboard trap** (2.1.2 A): Focus can always move away, except a modal that traps on purpose and then releases.
+- [ ] **Keyboard operable** (2.1.1 A): Every mouse action has a keyboard path (Enter/Space, or a focusable control instead of hover-only).
+- [ ] **Focus trapping**: A modal traps focus until it closes, then returns focus to the trigger.
+- [ ] **Skip link** (2.4.1 A): "Skip to main content" is visible on focus and moves focus to `<main>`.
+- [ ] **Focus not obscured** (2.4.11 AA): Sticky headers, footers, and banners don’t fully cover the focused element. See [rationale](reference.md#checklist-rationale).
+- [ ] **Character key shortcuts** (2.1.4 A, not AA): Single-character shortcuts can be turned off, remapped, or limited to when the control is focused.
+- [ ] **Dragging alternative** (2.5.7 AA): Drag actions also work with a click, tap, or text field.
 
 ### Forms and labels
 
-- [ ] **Labels**: Every form control has an associated `<label>` (by `id`/`for` or wrapping) or `aria-label`/`aria-labelledby`. Placeholder is not the label.
-- [ ] **Errors**: Associate error messages with controls (e.g. `aria-describedby`, `aria-invalid`) and announce errors to screen readers.
-- [ ] **Required/optional**: Indicate with `aria-required` and/or visible text; ensure required fields are clearly marked.
-- [ ] **Grouping**: Use `<fieldset>` + `<legend>` for radio/checkbox groups.
-- [ ] **Input purpose** (WCAG 1.3.5 AA): Set `autocomplete` on fields collecting user info (e.g. `name`, `email`, `tel`, `street-address`) so browsers/assistive tech can autofill.
-- [ ] **Accessible authentication** (WCAG 2.2 3.3.8 AA): Don't force cognitive-function tests (memorizing passwords, transcribing, solving puzzles) as the only way to log in. Allow paste and password managers; offer alternatives (e.g. OTP, passkeys, "show password").
-- [ ] **Redundant entry** (WCAG 2.2 3.3.7 AA): Within a single process, don't ask users to re-enter info they already provided — auto-populate or let them select it.
+- [ ] **Labels**: Every control has a `<label>` (`for`/`id` or wrapping) or `aria-label`/`aria-labelledby`. Placeholder is not a label.
+- [ ] **Label in name** (2.5.3 AA): The accessible name includes the visible text. `aria-label` replaces the contents, so don’t use it on a control that already shows a label.
+- [ ] **Errors**: Point at the message with `aria-describedby`, set `aria-invalid="true"`, and put the message in the DOM while it applies.
+- [ ] **Required/optional**: Mark required fields in text and with `aria-required` or the `required` attribute.
+- [ ] **Grouping**: Use `<fieldset>` and `<legend>` for radio and checkbox groups.
+- [ ] **Unavailable controls**: `disabled` removes the control from tab order. Use `aria-disabled="true"` when the user still needs to focus it and hear why.
+- [ ] **Input purpose** (1.3.5 AA): Set `autocomplete` (`name`, `email`, `tel`, `street-address`, and so on).
+- [ ] **Accessible authentication** (3.3.8 AA): Allow paste and password managers. Don’t make a puzzle or transcription the only way in.
+- [ ] **Redundant entry** (3.3.7 AA): Don’t ask for the same information again in one process. Auto-fill it or let the user select it.
+- [ ] **No surprise on focus or input** (3.2.1 A, 3.2.2 A): Focusing or typing in a control doesn’t change context (submit, navigate, or open a new window) by itself.
 
 ### Images and media
 
@@ -86,23 +91,26 @@ Copy and use as a progress list. Not exhaustive; expand from audit results.
 - [ ] **Live regions**: Use `aria-live`, `aria-atomic`, `aria-relevant` for dynamic content that should be announced (toasts, errors, updates). Prefer `aria-live="polite"` unless urgent.
 - [ ] **State**: Expose state (expanded/collapsed, selected, current) with `aria-expanded`, `aria-selected`, `aria-current`, etc., and keep it in sync with the UI.
 - [ ] **Avoid**: Don’t use `role`/`aria-*` on elements that already have that semantics (e.g. `role="button"` on `<button>`). Prefer not to add `aria-hidden="true"` to focusable content.
-- [ ] **Content on hover/focus** (WCAG 1.4.13 AA): Tooltips/popovers triggered by hover or focus must be **dismissible** (e.g. Escape without moving the pointer), **hoverable** (pointer can move onto the content without it vanishing), and **persistent** (stays until dismissed, focus moves, or it's no longer valid).
+- [ ] **Content on hover or focus** (1.4.13 AA): Tooltips are dismissible (Escape), hoverable, and persistent. See [rationale](reference.md#checklist-rationale).
+- [ ] **Status messages** (4.1.3 AA): Results that don’t move focus (toasts, "Saved", form errors) go through a live region.
 
 ### Color and contrast
 
-- [ ] **Contrast**: Text (and important graphics) meets WCAG AA: 4.5:1 for normal text, 3:1 for large text. Use a contrast checker (e.g. DevTools, WebAIM) and fix background/foreground.
-- [ ] **Not color alone**: Don’t convey information or state by color only. Add icons, text, or pattern (e.g. "Error" + red; "Required" + asterisk).
-- [ ] **Forced colors / high contrast**: Don't break under Windows High Contrast Mode / `forced-colors`. Avoid conveying meaning with background images alone; use `forced-colors: active` and system color keywords (e.g. `Canvas`, `CanvasText`, `Highlight`) where you must adjust, and keep focus indicators visible.
+- [ ] **Contrast** (1.4.3 AA): 4.5:1 for normal text, 3:1 for large text. See [reference.md](reference.md#contrast-and-color).
+- [ ] **Non-text contrast** (1.4.11 AA): Meaningful icons and control boundaries are at least 3:1 against the adjacent color.
+- [ ] **Not color alone** (1.4.1 A): Add text, an icon, or a pattern. Color can’t be the only cue.
+- [ ] **Forced colors**: Don’t rely on background images for meaning. See [rationale](reference.md#checklist-rationale).
 
 ### Motion and animation
 
-- [ ] **Reduce motion**: Respect `prefers-reduced-motion: reduce` (CSS or JS) by disabling or simplifying non-essential motion. Don’t rely on animation for critical information.
+- [ ] **Pause, stop, hide** (2.2.2 A): Content that moves, blinks, or auto-updates for more than 5 seconds can be paused, stopped, or hidden.
+- [ ] **Reduce motion** (2.3.3 AAA): Honor `prefers-reduced-motion: reduce` for non-essential animation. This is AAA, not AA.
 
 ### Responsive and zoom
 
-- [ ] **Zoom**: Layout works at 200% zoom (and preferably up to 400%). No horizontal scrolling at 320px width unless the content is inherently wide (e.g. data tables).
-- [ ] **Text spacing** (WCAG 1.4.12 AA): No loss of content/function when users override text spacing (line height ≥ 1.5×, paragraph spacing ≥ 2×, letter spacing ≥ 0.12em, word spacing ≥ 0.16em). Avoid fixed heights on text containers; allow overflow to reflow.
-- [ ] **Touch targets**: Meet WCAG 2.2 AA (2.5.8 Target Size Minimum) — at least **24×24 CSS px**, or adequate spacing between smaller targets. Aim for **44×44 CSS px** as best practice (WCAG AAA 2.5.5 / Apple HIG; Android suggests 48×48 dp) for primary touch controls. See [reference.md](reference.md#target-size-touchpointer).
+- [ ] **Reflow** (1.4.10 AA): At 400% zoom, no two-dimensional scrolling except for content that needs it (maps, tables, diagrams).
+- [ ] **Text spacing** (1.4.12 AA): User spacing overrides don’t clip content. See [rationale](reference.md#checklist-rationale).
+- [ ] **Touch targets** (2.5.8 AA): At least 24×24 CSS px, or spacing that meets the criterion. 44×44 is AAA / platform practice, not the AA minimum. See [reference.md](reference.md#target-size-touchpointer).
 
 ## Corner cases and edge cases
 
@@ -118,10 +126,12 @@ Handle these explicitly; they are often missed by automated tools.
 - **Language of parts**: Use `lang` on an element when its content is in a different language than the page (e.g. `<span lang="fr">`), so SR uses the correct pronunciation.
 - **Announcement order**: Ensure live regions and focus moves don't create confusing order (e.g. result announced before "Loading" is removed). Use `aria-busy` during loading and clear it when content is ready.
 
-### Voice control / Voice View
+### Voice control and VoiceView
 
-- **Distinct, speakable labels**: Users of voice input (e.g. Voice Access, Dragon, Voice Control) say element names. Avoid many elements with the same label (e.g. multiple "Submit" or "Button"). Use unique, short labels (e.g. "Submit registration", "Cancel") so users can say "Click Submit registration".
-- **Numbering**: If labels can't be unique, voice software may fall back to "first button", "second link". Prefer unique labels over relying on order.
+These are different tools. Don’t treat VoiceView as speech input.
+
+- **Voice control** (Voice Access, macOS Voice Control, Dragon): Users speak the accessible name ("Click Submit registration"). Names must be unique and short. Prefer that over "first button / second button".
+- **VoiceView** (Amazon Fire OS screen reader): It reads names, roles, and states, the same way TalkBack does. It is not a voice-command product. Test procedure: [reference.md](reference.md#screen-reader-testing-manual).
 
 ### Single-page apps (SPA) and dynamic content
 
@@ -138,8 +148,8 @@ Handle these explicitly; they are often missed by automated tools.
 
 ## Fix patterns (concise)
 
-- **Custom control**: Use the right native element or add `role`, `tabindex="0"` (or `-1` if managed by script), and `aria-*` state/name. Handle Enter/Space and focus.
-- **Modal**: `role="dialog"`, `aria-modal="true"`, `aria-labelledby` (title), focus move to dialog on open, trap focus, Escape closes, focus return on close.
+- **Custom control**: Use the native element. If you can’t, add `role`, `tabindex="0"` (or `-1` when script manages focus), an accessible name, and Enter/Space handling.
+- **Modal**: Prefer `<dialog>` opened with `showModal()` (focus trap and `aria-modal` come with it). A custom dialog needs `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, focus moved in, focus trapped, Escape to close, and focus returned to the trigger.
 - **Expand/collapse**: `aria-expanded` and `aria-controls` on trigger; `id` on panel; toggle on Enter/Space.
 - **Tabs**: `role="tablist"`, `role="tab"` (with `aria-selected`, `aria-controls`), `role="tabpanel"` (with `id`); arrow keys switch tabs; activate on Enter/Space.
 - **Error message**: `aria-describedby="id-of-error"` on control, `aria-invalid="true"` when invalid; ensure error element has `id` and is in DOM when invalid.
@@ -152,7 +162,11 @@ When reporting issues, use:
 - **Serious**: Major barrier (e.g. poor contrast, wrong semantics). Fix soon.
 - **Minor**: Improves experience (e.g. redundant ARIA, heading order). Fix when practical.
 
-Include: file/component, element or selector, rule or guideline, and a concrete fix (code or steps).
+Include: severity, file or component, element or selector, rule or guideline, and a concrete fix.
+
+**Example**
+
+**Serious** — `src/components/IconButton.tsx` — `button.icon-delete` — axe `button-name` (4.1.2 Name, Role, Value, A). The delete control is an icon-only `<button>` with no accessible name. Add `aria-label="Delete item"` or visually hidden text. Re-run axe on this component and confirm `button-name` is gone. Then Tab to the button and activate it with Enter and Space.
 
 ## After fixing
 
@@ -166,6 +180,7 @@ For detailed WCAG criteria, ARIA patterns, and component examples, see [referenc
 
 ## Changelog
 
+- **1.4.0** (2026-10-01): Corrected checklist accuracy: removed the non-existent `aria-flowto` attribute; 2.1.4 Character Key Shortcuts is Level A, not AA; skipped headings are best practice, not an automatic AA fail; added 3.1.1 language, 2.5.3 label in name, 2.1.2 no keyboard trap, 1.4.11 non-text contrast, 4.1.3 status messages, 2.2.2 pause/stop/hide, and 3.2.1/3.2.2. Labeled `prefers-reduced-motion` as 2.3.3 AAA. Prefer `<dialog>` / `showModal()`. Distinguished voice control from Amazon VoiceView. Moved long WCAG rationale into `reference.md` and added a worked issue report. Tool version pins from 1.1.0–1.3.0 are unchanged.
 - **1.3.0** (2026-07-05): Added the new WCAG 2.2 AA success criteria that were missing from the checklist — 2.4.11 Focus Not Obscured, 2.5.7 Dragging Movements, 3.2.6 Consistent Help, 3.3.7 Redundant Entry, 3.3.8 Accessible Authentication — plus 1.3.5 Input Purpose (`autocomplete`), 1.4.13 Content on Hover/Focus, 2.1.4 Character Key Shortcuts, 1.4.12 Text Spacing, and forced-colors/high-contrast guidance. Enumerated all new-in-2.2 criteria in `reference.md`. Renamed the skill folder to `check-fix-accessibility` to match the skill `name` and repo, and noted `reference.md` as the source of truth for overlapping guidance.
 - **1.2.0** (2026-07-04): Added React-specific `reference.md` guidance — "Automated testing in React" (jest-axe/vitest-axe, Testing Library role queries, cypress-axe / `@axe-core/playwright`, all pinned) and "React focus & routing" (useEffect+ref focus, react-router, focus-trap libs, accessible primitives like React Aria/Radix/Headless UI); cross-linked from SKILL.md.
 - **1.1.0** (2026-07-04): Corrected WCAG 2.2 Recommendation date (Oct 2023; revised edition Dec 2024); removed obsolete 4.1.1 Parsing from Robust; clarified target size (2.5.8 AA = 24×24 CSS px, 44×44 is AAA/platform best practice); pinned tool versions and fixed the Vue ESLint plugin package name; added version/last_reviewed metadata and this changelog.
