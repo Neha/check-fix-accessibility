@@ -71,6 +71,21 @@ So: **24×24 is the AA bar; 44×44 is best practice / AAA**, not the AA requirem
 - Large text (18pt+ or 14pt+ bold): ≥ 3:1 (AA) or 4.5:1 (AAA).
 - UI components and graphics: ≥ 3:1 against adjacent colors.
 
+## When the user asks for AAA
+
+A and AA stay the default. Apply this section only when the user, the ticket, or the spec says AAA (or names one of these criteria). AAA is a claim about a whole page or process. Don’t stamp "WCAG AAA" on a single component, and don’t drop AA work to chase it.
+
+Check these when they match the UI you are fixing. Say which ones you checked and which you skipped.
+
+- **1.4.6 Contrast (Enhanced)**: normal text 7:1, large text 4.5:1. The AA ratios in the list above are not enough for this criterion.
+- **2.4.12 Focus Not Obscured (Enhanced)**: no part of the focused element is hidden. AA (2.4.11) only requires that it not be entirely hidden.
+- **2.4.13 Focus Appearance**: the focus indicator has a minimum area and a 3:1 contrast change between focused and unfocused states. Follow the criterion text rather than inventing a pixel size.
+- **2.5.5 Target Size (Enhanced)**: 44×44 CSS px. This is the size the checklist already calls best practice. It is not the AA minimum (24×24, 2.5.8).
+- **2.4.9 Link Purpose (Link Only)**: the link text alone says where it goes. "Read more" fails even with surrounding context.
+- **2.3.3 Animation from Interactions**: honor `prefers-reduced-motion: reduce`. Already noted on the checklist as AAA.
+- **3.3.9 Accessible Authentication (Enhanced)**: same as 3.3.8 AA, without the exception for recognizing objects or personal content.
+- **1.4.8 Visual Presentation** and **3.1.5 Reading Level**: real AAA criteria, and easy to fake. Don’t claim them for app chrome or for button text. Call them out only when the content is a page of prose and you can point at the specific requirement you met.
+
 ## Testing tools
 
 Pin exact versions (install as `devDependencies` + lockfile) rather than relying on `npx <latest>`, so results are reproducible. Versions below are known-good as of the "Last reviewed" date in SKILL.md; bump them deliberately.
@@ -80,6 +95,25 @@ Pin exact versions (install as `devDependencies` + lockfile) rather than relying
 - **pa11y**: `npm i -D pa11y@9.1.1`; `npx pa11y <url>`.
 - **ESLint**: `eslint-plugin-jsx-a11y@6.10.2` (React), `eslint-plugin-vuejs-accessibility@2.5.0` (Vue).
 - **Contrast**: Chrome DevTools Inspect → Accessibility pane; or WebAIM Contrast Checker.
+
+### Copy-paste audit scripts
+
+There is no runner in this skill repo. Add this to the app you are auditing, install the devDependencies, start the app, then run the script. `@axe-core/cli --exit` returns non-zero when it finds violations.
+
+```json
+{
+  "scripts": {
+    "a11y:axe": "axe http://127.0.0.1:3000 --exit",
+    "a11y:pa11y": "pa11y http://127.0.0.1:3000"
+  },
+  "devDependencies": {
+    "@axe-core/cli": "4.12.1",
+    "pa11y": "9.1.1"
+  }
+}
+```
+
+Change the URL to the page you are fixing. Component tests in [frameworks.md](frameworks.md#component-tests) cover what a URL scan cannot see.
 
 ## Automated testing in React
 

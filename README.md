@@ -2,7 +2,7 @@
 
 A reusable **accessibility (a11y) skill** for AI coding assistants. It teaches the agent how to audit and fix front-end accessibility issues (WCAG 2.2 Level A/AA), including semantics, keyboard navigation, ARIA, forms, contrast, and screen readers—for web (React, Next.js, Vue, Angular) and with pointers for native mobile.
 
-**Skill version 1.6.0** · standard WCAG 2.2 Level A and AA · last reviewed 2026-10-01. The changelog is in [`check-fix-accessibility/SKILL.md`](check-fix-accessibility/SKILL.md#changelog). Pinned tool versions are recorded in the skill; check for newer releases before you adopt them.
+**Skill version 1.7.0** · standard WCAG 2.2 Level A and AA · last reviewed 2026-10-01. The changelog is in [`check-fix-accessibility/SKILL.md`](check-fix-accessibility/SKILL.md#changelog). Pinned tool versions are recorded in the skill; check for newer releases before you adopt them.
 
 Use this skill when you or your team work on accessibility, a11y, WCAG, screen readers, keyboard navigation, focus management, ARIA, semantic HTML, or fixing accessibility issues in HTML/React/Next.js/Vue or other front-end code.
 
@@ -375,7 +375,9 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 - **Fix patterns**: Custom controls, native `<dialog>`, expand/collapse, tabs, error messages. A worked report is in [Providing feedback](check-fix-accessibility/SKILL.md#providing-feedback).
 - **reference.md**: WCAG 2.2 summary (including the new 2.2 criteria), checklist rationale, target size, ARIA patterns, React focus and routing, screen reader testing, native mobile. In **check-fix-accessibility/reference.md**.
 - **frameworks.md**: React (`useId`, `createPortal`, React Router, Next.js), Vue (`useId`, `<Teleport>`, Vue Router), Angular (`cdkTrapFocus`, CDK dialog, `NavigationEnd`), plus component axe tests. In **check-fix-accessibility/frameworks.md**.
-- **Version**: 1.6.0, reviewed 2026-10-01 against WCAG 2.2 A/AA. [Changelog](check-fix-accessibility/SKILL.md#changelog).
+- **AAA**: Opt-in only, in [reference.md](check-fix-accessibility/reference.md#when-the-user-asks-for-aaa). A and AA stay the default.
+- **Audit snippet**: Copy-paste `a11y:axe` and `a11y:pa11y` scripts in reference.md. This repo does not ship a runner.
+- **Version**: 1.7.0, reviewed 2026-10-01 against WCAG 2.2 A/AA. [Changelog](check-fix-accessibility/SKILL.md#changelog).
 
 ---
 
