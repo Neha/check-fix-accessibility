@@ -30,6 +30,23 @@ Don't overlook these when you claim 2.2 conformance — they're the most common 
 - **3.3.8 Accessible Authentication (Minimum)** — *AA*: No cognitive-function test (memorization, puzzles, transcription) required to authenticate; allow paste/password managers or provide an alternative.
 - **3.3.9 Accessible Authentication (Enhanced)** — *AAA*: As 3.3.8 but without the object-recognition/personal-content exceptions.
 
+## Checklist rationale
+
+The skill checklist stays to one line. The detail that used to sit on those lines:
+
+- **3.2.6 Consistent Help (AA)**: When help exists (contact, chat, help page, self-help), keep it in the same relative order on every page.
+- **2.4.11 Focus Not Obscured (AA)**: A focused element must not be entirely hidden by a sticky header, footer, or cookie banner. Use `scroll-margin` or an offset so it stays visible.
+- **2.1.4 Character Key Shortcuts (A)**: If a single character fires a shortcut, the user can turn it off, remap it, or have it work only while the control is focused. This stops speech input and stray keypresses from activating it. It is Level A, not AA.
+- **2.5.7 Dragging Movements (AA)**: Sliders, reorder, and drag-and-drop also work with a single pointer that does not drag (a button or an input).
+- **1.3.5 Identify Input Purpose (AA)**: `autocomplete` tokens such as `name`, `email`, `tel`, and `street-address` let browsers and assistive tech fill the field.
+- **3.3.8 Accessible Authentication (AA)**: Don’t require memorizing, transcribing, or solving a puzzle as the only sign-in. Allow paste and password managers, or offer another method (OTP, passkey, show password).
+- **3.3.7 Redundant Entry (AA)**: In one process, don’t make the user type information they already gave. Auto-populate it or let them select it.
+- **1.4.13 Content on Hover or Focus (AA)**: Extra content shown on hover or focus is dismissible (Escape, without moving the pointer), hoverable (the pointer can move onto it), and persistent until the user dismisses it, moves focus, or the content is no longer valid.
+- **1.4.12 Text Spacing (AA)**: Content still works when the user sets line height to at least 1.5×, paragraph spacing to at least 2×, letter spacing to at least 0.12em, and word spacing to at least 0.16em. Don’t lock text in a fixed height.
+- **Forced colors**: Under `forced-colors: active` (Windows high contrast), don’t put the meaning only in a background image. Use system colors such as `Canvas`, `CanvasText`, and `Highlight` when you must override, and keep the focus indicator visible.
+- **2.5.3 Label in Name (AA)**: Speech users say the text they can see. If the visible label is "Search", the accessible name must contain "Search". `aria-label` replaces the text inside the element, so an `aria-label` of "Submit query" on a button that reads "Search" fails.
+- **2.2.2 Pause, Stop, Hide (A)** vs **2.3.3 Animation from Interactions (AAA)**: Carousels and auto-updating regions that run longer than 5 seconds need a pause, stop, or hide control (A). Reducing animation when `prefers-reduced-motion: reduce` is set is the AAA criterion. Do the AAA behavior when the user asks for it; don’t label it as required for AA.
+
 ## ARIA patterns (high level)
 
 - **Dialog**: `role="dialog"`, `aria-modal="true"`, `aria-labelledby` (and optional `aria-describedby`). Trap focus; Escape closes; focus return.
@@ -130,10 +147,10 @@ Test: focus order, all interactive elements reachable, names and states announce
 - **Live region timing**: Set `aria-live` and update content after a short delay if the SR might miss very fast updates. Use `aria-atomic="true"` when the whole region should be re-announced.
 - **Iframe**: Always give `<iframe title="Description of content">` or `aria-label` so SR knows what the embedded content is.
 
-## Voice control / Voice View
+## Voice control and VoiceView
 
-- **Voice control** (e.g. Windows Voice Access, macOS Voice Control, Dragon): Users speak commands like "Click Submit" or "Select checkbox I agree". Labels must be unique and easy to say; avoid long or identical names. Test by speaking the visible labels and numbers.
-- **Voice View** (and similar): Voice-driven browsing or assistant features rely on the same accessible names and roles. Ensure every interactive element has a clear, speakable name.
+- **Voice control** (Windows Voice Access, macOS Voice Control, Dragon) is speech input. Users say "Click Submit". The accessible name must match the visible label (2.5.3) and should be unique.
+- **VoiceView** is Amazon’s screen reader on Fire OS. It announces name, role, and state. It is not a voice-command tool. Give images and controls a name the same way you would for TalkBack.
 
 ## Native mobile (brief)
 
