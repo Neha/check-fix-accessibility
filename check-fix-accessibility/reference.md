@@ -134,23 +134,49 @@ return <h1 ref={headingRef} tabIndex={-1}>{title}</h1>;
 
 ## Screen reader testing (manual)
 
-- **Windows**: NVDA (free), JAWS.
-- **macOS**: VoiceOver (Cmd+F5).
-- **Mobile**: TalkBack (Android), VoiceOver (iOS).
+Automated tools miss focus order, announcement timing, and whether the name is the one a person can use. After a fix, run this on the changed flow. A full-site pass is only when the user asks for one.
 
-Test: focus order, all interactive elements reachable, names and states announced correctly, dynamic content announced when appropriate.
+Listen for four things, in this order: **name**, **role**, **state** (expanded, selected, disabled, invalid), **value**. Then do the action and check that either focus moved to the new content or a live region spoke the result. Silence after "Save" is a failure.
+
+| Screen reader | Where | Start | Move | Activate |
+|---------------|--------|-------|------|----------|
+| NVDA | Windows, browser in browse mode | Launch NVDA | `H` next heading, `B` button, `K` link, `F` form field; `Tab` for focus order | `Enter` |
+| JAWS | Windows | Launch JAWS | Same idea: headings, links, form fields, then `Tab` | `Enter` |
+| VoiceOver | macOS | Cmd+F5. VO is Control+Option | VO+Right / VO+Left. Rotor: VO+U, then headings or form controls | VO+Space |
+| VoiceOver | iOS | Settings → Accessibility → VoiceOver | Swipe right / left | Double-tap |
+| TalkBack | Android | Settings → Accessibility → TalkBack | Swipe right / left | Double-tap |
+| VoiceView | Amazon Fire OS | Settings → Accessibility → VoiceView Screen Reader | Swipe right / left | Double-tap |
+
+NVDA starts in browse mode on the web. If a widget never reaches forms mode, the keystrokes go to the page instead of the control. VoiceView is a screen reader. It is not speech input. Samsung’s screen reader is **Voice Assistant** (TalkBack-based), not VoiceView. Don’t mix the names up.
+
+Pass when every control in the flow is reachable, the name matches the visible text (2.5.3), state changes are announced, and the result is announced or focused. Fail when a control is silent, an icon button reads "button", or focus stays on a control that unmounted.
 
 ### Screen reader corner cases
 
-- **Visually hidden label**: Use a utility (e.g. `.sr-only`, `.visually-hidden`) that keeps content in the DOM and readable by SR but hides visually (e.g. `position: absolute; width: 1px; height: 1px; clip: rect(0,0,0,0)`). Don't use `display: none` or `visibility: hidden` for content that should be announced.
+- **Visually hidden label**: Keep the text in the accessibility tree. Don’t use `display: none` or `visibility: hidden` for text that should be announced.
+
+```css
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+```
+
 - **Tables**: Use `<th scope="col">` / `scope="row"` or `headers="id-of-th"` on `<td>` for complex tables. Add `<caption>` or `aria-labelledby` so the table has a name.
 - **Live region timing**: Set `aria-live` and update content after a short delay if the SR might miss very fast updates. Use `aria-atomic="true"` when the whole region should be re-announced.
 - **Iframe**: Always give `<iframe title="Description of content">` or `aria-label` so SR knows what the embedded content is.
 
 ## Voice control and VoiceView
 
-- **Voice control** (Windows Voice Access, macOS Voice Control, Dragon) is speech input. Users say "Click Submit". The accessible name must match the visible label (2.5.3) and should be unique.
-- **VoiceView** is Amazon’s screen reader on Fire OS. It announces name, role, and state. It is not a voice-command tool. Give images and controls a name the same way you would for TalkBack.
+- **Voice control** (Windows Voice Access, macOS Voice Control, Dragon) is speech input. The user says the visible label ("Click Submit"). That only works when the accessible name contains the visible text (2.5.3) and two controls don’t share it. Test by speaking the label, not by reading the accessibility tree.
+- **VoiceView** (Fire OS) uses the same names, roles, and states as TalkBack. An unlabeled icon is skipped or announced as an unlabeled button. There is no separate VoiceView API. Fix the accessible name and retest with the gestures in the table above.
 
 ## Native mobile (brief)
 

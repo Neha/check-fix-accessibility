@@ -1,7 +1,7 @@
 ---
 name: check-fix-accessibility
 description: Check and fix accessibility (a11y) on front-end projects (web and mobile web), including Next.js, React, Vue, Angular. Use when the user asks about accessibility, a11y, WCAG, screen readers, voice control, Voice View, keyboard navigation, focus management, ARIA, semantic HTML, color contrast, or fixing accessibility issues in HTML, React, Next.js, Vue, or other front-end code. For native mobile apps (React Native, iOS, Android), see reference; patterns differ.
-version: 1.5.0
+version: 1.6.0
 standard: WCAG 2.2 (Level A & AA)
 last_reviewed: 2026-10-01
 ---
@@ -180,6 +180,7 @@ For detailed WCAG criteria, ARIA patterns, and component examples, see [referenc
 
 ## Changelog
 
+- **1.6.0** (2026-10-01): Replaced the one-line screen-reader note with a pass/fail procedure for NVDA, JAWS, VoiceOver, TalkBack, and Amazon VoiceView, including the gestures that move and activate. VoiceView stays a screen reader; Samsung Voice Assistant is named so the two are not swapped. The visually hidden CSS snippet now actually hides the text.
 - **1.5.0** (2026-10-01): Added `frameworks.md` with React, Vue, and Angular patterns for labels and ids, native buttons, modals (`createPortal`, `<Teleport>`, `cdkTrapFocus` / CDK dialog), and focus on route change (React Router, Next.js, Vue Router, Angular `NavigationEnd`). Component axe tests for Vue and Angular sit next to the existing React ones. Shared anti-patterns stay in this file.
 - **1.4.0** (2026-10-01): Corrected checklist accuracy: removed the non-existent `aria-flowto` attribute; 2.1.4 Character Key Shortcuts is Level A, not AA; skipped headings are best practice, not an automatic AA fail; added 3.1.1 language, 2.5.3 label in name, 2.1.2 no keyboard trap, 1.4.11 non-text contrast, 4.1.3 status messages, 2.2.2 pause/stop/hide, and 3.2.1/3.2.2. Labeled `prefers-reduced-motion` as 2.3.3 AAA. Prefer `<dialog>` / `showModal()`. Distinguished voice control from Amazon VoiceView. Moved long WCAG rationale into `reference.md` and added a worked issue report. Tool version pins from 1.1.0–1.3.0 are unchanged.
 - **1.3.0** (2026-07-05): Added the new WCAG 2.2 AA success criteria that were missing from the checklist — 2.4.11 Focus Not Obscured, 2.5.7 Dragging Movements, 3.2.6 Consistent Help, 3.3.7 Redundant Entry, 3.3.8 Accessible Authentication — plus 1.3.5 Input Purpose (`autocomplete`), 1.4.13 Content on Hover/Focus, 2.1.4 Character Key Shortcuts, 1.4.12 Text Spacing, and forced-colors/high-contrast guidance. Enumerated all new-in-2.2 criteria in `reference.md`. Renamed the skill folder to `check-fix-accessibility` to match the skill `name` and repo, and noted `reference.md` as the source of truth for overlapping guidance.
