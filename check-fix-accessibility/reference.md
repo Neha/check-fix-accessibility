@@ -83,7 +83,7 @@ Pin exact versions (install as `devDependencies` + lockfile) rather than relying
 
 ## Automated testing in React
 
-Static linting (`eslint-plugin-jsx-a11y`) only catches a subset of issues; add runtime checks against the rendered DOM. Pin versions (versions below are known-good as of the "Last reviewed" date in SKILL.md).
+Vue and Angular axe examples are in [frameworks.md](frameworks.md#component-tests). Static linting (`eslint-plugin-jsx-a11y`) only catches a subset of issues; add runtime checks against the rendered DOM. Pin versions (versions below are known-good as of the "Last reviewed" date in SKILL.md).
 
 - **Query by accessibility, not by test id**: Testing Library's role/name queries double as a11y assertions — if `getByRole('button', { name: 'Save' })` can't find it, neither can assistive tech. Prefer `getByRole` / `getByLabelText` over `getByTestId`. `npm i -D @testing-library/react@16.3.2 @testing-library/jest-dom@6.9.1`.
 
@@ -117,7 +117,7 @@ test('form has no a11y violations', async () => {
 
 ## React focus & routing
 
-Generic SPA advice ("move focus / announce on route change") needs concrete React patterns:
+Vue Router and Angular `NavigationEnd` snippets are in [frameworks.md](frameworks.md#vue-routing). Generic SPA advice ("move focus / announce on route change") needs concrete React patterns:
 
 - **Focus on mount / step change**: use a `ref` + `useEffect` to move focus (e.g. to a heading or first field). Give the target `tabIndex={-1}` so it's programmatically focusable without joining the tab order.
 
