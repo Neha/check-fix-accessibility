@@ -1,14 +1,14 @@
 ---
 name: check-fix-accessibility
 description: Check and fix accessibility (a11y) on front-end projects (web and mobile web), including Next.js, React, Vue, Angular. Use when the user asks about accessibility, a11y, WCAG, screen readers, voice control, Voice View, keyboard navigation, focus management, ARIA, semantic HTML, color contrast, or fixing accessibility issues in HTML, React, Next.js, Vue, or other front-end code. For native mobile apps (React Native, iOS, Android), see reference; patterns differ.
-version: 1.6.0
+version: 1.7.0
 standard: WCAG 2.2 (Level A & AA)
 last_reviewed: 2026-10-01
 ---
 
 # Check and Fix Front-End Accessibility
 
-Systematically audit and fix accessibility issues in any front-end project. Prioritize WCAG 2.2 Level A and AA unless the user specifies otherwise.
+Systematically audit and fix accessibility issues in any front-end project. Prioritize WCAG 2.2 Level A and AA unless the user specifies otherwise. AAA is opt-in: see [reference.md](reference.md#when-the-user-asks-for-aaa).
 
 > **Versioning & currency**: This skill is versioned (see `version` above) and reviewed against a specific standard on the `last_reviewed` date. WCAG and tooling evolve — before relying on it, confirm the standard and pinned tool versions are still current, and bump `version` + `last_reviewed` and the [Changelog](#changelog) when you update guidance.
 
@@ -180,6 +180,7 @@ For detailed WCAG criteria, ARIA patterns, and component examples, see [referenc
 
 ## Changelog
 
+- **1.7.0** (2026-10-01): Added an opt-in WCAG AAA section (contrast 7:1, focus not obscured enhanced, focus appearance, 44×44 targets, link purpose from link text alone, reduced motion, accessible authentication enhanced). A and AA stay the default. Added a copy-paste `a11y:axe` / `a11y:pa11y` npm script snippet; this repo does not ship a runner.
 - **1.6.0** (2026-10-01): Replaced the one-line screen-reader note with a pass/fail procedure for NVDA, JAWS, VoiceOver, TalkBack, and Amazon VoiceView, including the gestures that move and activate. VoiceView stays a screen reader; Samsung Voice Assistant is named so the two are not swapped. The visually hidden CSS snippet now actually hides the text.
 - **1.5.0** (2026-10-01): Added `frameworks.md` with React, Vue, and Angular patterns for labels and ids, native buttons, modals (`createPortal`, `<Teleport>`, `cdkTrapFocus` / CDK dialog), and focus on route change (React Router, Next.js, Vue Router, Angular `NavigationEnd`). Component axe tests for Vue and Angular sit next to the existing React ones. Shared anti-patterns stay in this file.
 - **1.4.0** (2026-10-01): Corrected checklist accuracy: removed the non-existent `aria-flowto` attribute; 2.1.4 Character Key Shortcuts is Level A, not AA; skipped headings are best practice, not an automatic AA fail; added 3.1.1 language, 2.5.3 label in name, 2.1.2 no keyboard trap, 1.4.11 non-text contrast, 4.1.3 status messages, 2.2.2 pause/stop/hide, and 3.2.1/3.2.2. Labeled `prefers-reduced-motion` as 2.3.3 AAA. Prefer `<dialog>` / `showModal()`. Distinguished voice control from Amazon VoiceView. Moved long WCAG rationale into `reference.md` and added a worked issue report. Tool version pins from 1.1.0–1.3.0 are unchanged.
