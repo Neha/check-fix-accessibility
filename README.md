@@ -2,7 +2,7 @@
 
 A reusable **accessibility (a11y) skill** for AI coding assistants. It teaches the agent how to audit and fix front-end accessibility issues (WCAG 2.2 Level A/AA), including semantics, keyboard navigation, ARIA, forms, contrast, and screen readers—for web (React, Next.js, Vue, Angular) and with pointers for native mobile.
 
-**Skill version 1.7.0** · standard WCAG 2.2 Level A and AA · last reviewed 2026-10-01. The changelog is in [`check-fix-accessibility/SKILL.md`](check-fix-accessibility/SKILL.md#changelog). Pinned tool versions are recorded in the skill; check for newer releases before you adopt them.
+**Skill version 1.8.0** · standard WCAG 2.2 Level A and AA · last reviewed 2026-10-01. The changelog is in [`check-fix-accessibility/SKILL.md`](check-fix-accessibility/SKILL.md#changelog). Pinned tool versions are recorded in the skill; check for newer releases before you adopt them.
 
 Use this skill when you or your team work on accessibility, a11y, WCAG, screen readers, keyboard navigation, focus management, ARIA, semantic HTML, or fixing accessibility issues in HTML/React/Next.js/Vue or other front-end code.
 
@@ -75,7 +75,7 @@ check-fix-accessibility/          ← repo root
 | **check-fix-accessibility/reference.md** | Deeper reference: WCAG summary, ARIA patterns, testing tools, screen readers, native mobile. |
 | **README.md** | This file: setup for Cursor, Claude, Kiro, Codex, Google Antigravity. |
 
-When installing, use the **check-fix-accessibility** folder so your tool sees a skill directory named `check-fix-accessibility` containing `SKILL.md` and `reference.md`.
+When installing, use the **check-fix-accessibility** folder so your tool sees a skill directory named `check-fix-accessibility` containing `SKILL.md`, `frameworks.md`, and `reference.md`.
 
 ---
 
@@ -113,256 +113,35 @@ The heading anchor for this section is [`#mcp-a11y-mcp-configuration`](#mcp-a11y
 
 ## Setup by platform
 
-Install the skill so your AI assistant loads it when you work on accessibility. Choose your editor/tool below.
-
----
-
-### Cursor
-
-Cursor uses **skills** as directories with a `SKILL.md` file. You can use this as a **project skill** (shared with the repo) or a **personal skill** (all your projects).
-
-**Option A: Project skill (recommended for teams)**
-
-1. Clone this repo, then copy the **check-fix-accessibility** folder into your project’s Cursor skills directory:
-
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   mkdir -p .cursor/skills
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility .cursor/skills/
-   ```
-
-   Or from the repo root after cloning: `cp -r check-fix-accessibility .cursor/skills/`
-
-2. Resulting layout:
-
-   ```
-   .cursor/skills/check-fix-accessibility/
-├── SKILL.md
-├── frameworks.md
-└── reference.md
-   ```
-
-3. Restart Cursor or start a new chat. The agent will use the skill when you mention accessibility, a11y, WCAG, etc.
-
-**Option B: Personal skill (all projects)**
-
-1. Create your personal skills directory if needed, then copy the **check-fix-accessibility** folder there:
-
-   ```bash
-   mkdir -p ~/.cursor/skills
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.cursor/skills/
-   ```
-
-2. Restart Cursor. The skill is now available in every project.
-
-**Note:** Do **not** put this under `~/.cursor/skills-cursor/`; that directory is reserved for Cursor’s built-in skills.
-
----
-
-### Claude (Claude Code)
-
-Claude Code can use **project instructions** (e.g. `CLAUDE.md`) or a **rules directory** (`.claude/rules/`). This skill fits well as a rule or as content referenced from `CLAUDE.md`.
-
-**Option A: Single rule file**
-
-1. Create the rules directory:
-
-   ```bash
-   mkdir -p .claude/rules
-   ```
-
-2. Copy the skill into a rule file (e.g. `accessibility.mdc`). You can either:
-   - Paste the contents of **check-fix-accessibility/SKILL.md** into the rule body, or  
-   - Keep the repo in your project and add a rule that points to the skill folder.
-
-   Example `.claude/rules/accessibility.mdc`:
-
-   ```markdown
-   ---
-   description: Check and fix front-end accessibility (a11y, WCAG). Use when the user asks about accessibility, a11y, WCAG, screen readers, keyboard navigation, ARIA, semantic HTML, or fixing a11y issues.
-   paths: "**/*.tsx","**/*.jsx","**/*.vue","**/*.html","**/*.css"
-   ---
-
-   [Paste contents of check-fix-accessibility/SKILL.md here, or instruct the agent to read check-fix-accessibility/SKILL.md and check-fix-accessibility/reference.md when working on a11y.]
-   ```
-
-3. For a smaller rule, reference the files in your repo:
-
-   ```markdown
-   ---
-   description: Accessibility (a11y) audit and fix guidance
-   paths: "**/*.tsx","**/*.jsx","**/*.vue","**/*.html"
-   ---
-
-   When working on accessibility, a11y, WCAG, screen readers, or keyboard/ARIA issues, read and follow:
-   - check-fix-accessibility/SKILL.md (workflow, checklist, fix patterns)
-   - check-fix-accessibility/reference.md (WCAG, ARIA, testing, native mobile)
-   ```
-
-**Option B: User-level instructions**
-
-1. Copy the **check-fix-accessibility** folder to your Claude config, e.g.:
-
-   ```bash
-   mkdir -p ~/.claude/skills
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.claude/skills/
-   ```
-
-2. In `~/.claude/CLAUDE.md` (or your project’s `CLAUDE.md`), add a line such as:
-
-   ```markdown
-   When the user asks about accessibility, a11y, WCAG, screen readers, or fixing a11y issues, use the instructions in ~/.claude/skills/check-fix-accessibility/SKILL.md and reference.md.
-   ```
-
-Scopes (project vs user) follow Claude Code’s hierarchy: project (`.claude/`) overrides user (`~/.claude/`).
-
----
-
-### Kiro
-
-Kiro uses **Agent Skills** in `.kiro/skills/` (workspace) or `~/.kiro/skills/` (global). Skills use YAML frontmatter in `SKILL.md` and load on demand.
-
-**Option A: Workspace skill (this project)**
-
-1. In your project root, create the Kiro skills directory and copy the **check-fix-accessibility** folder into it:
-
-   ```bash
-   mkdir -p .kiro/skills
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility .kiro/skills/
-   ```
-
-   Or from this repo root: `cp -r check-fix-accessibility .kiro/skills/`
-
-2. Ensure `SKILL.md` has YAML frontmatter (it already includes `name` and `description`). Kiro uses that to know when to load the skill.
-
-3. Layout:
-
-   ```
-   .kiro/skills/check-fix-accessibility/
-├── SKILL.md
-├── frameworks.md
-└── reference.md
-   ```
-
-4. Restart Kiro or start a new session.
-
-**Option B: Global skill (all workspaces)**
-
-1. Copy the **check-fix-accessibility** folder to Kiro’s global skills directory:
-
-   ```bash
-   mkdir -p ~/.kiro/skills
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.kiro/skills/
-   ```
-
-2. Layout:
-
-   ```
-   ~/.kiro/skills/check-fix-accessibility/
-├── SKILL.md
-├── frameworks.md
-└── reference.md
-   ```
-
-3. Restart Kiro. Workspace skills in `.kiro/skills/` take priority over global skills if both exist with the same name.
-
-See [Kiro Agent Skills docs](https://kiro.dev/docs/skills/) for import via the IDE and custom agent `skill://` URIs.
-
----
-
-### Codex
-
-Codex loads skills from **`$CODEX_HOME/skills`** (default `~/.codex/skills`). You can install from this GitHub repo using the Codex **skill-installer** or manually.
-
-**Option A: Install from GitHub (skill-installer)**
-
-If you have the skill-installer skill in Codex:
-
-1. In Codex, ask: *"Install the skill from GitHub repo `YOUR_USERNAME/check-fix-accessibility`, path `check-fix-accessibility`"* (so the installer uses the **check-fix-accessibility** subfolder).
-2. The installer will put the skill in `$CODEX_HOME/skills/check-fix-accessibility`.
-3. Restart Codex to load the new skill.
-
-**Option B: Manual install**
-
-1. Clone this repo, then copy the **check-fix-accessibility** folder into your Codex skills directory:
-
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   mkdir -p ~/.codex/skills
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.codex/skills/
-   ```
-
-   Or, if `CODEX_HOME` is set:
-
-   ```bash
-   cp -r /path/to/check-fix-accessibility-repo/check-fix-accessibility "$CODEX_HOME/skills/"
-   ```
-
-2. Ensure this structure:
-
-   ```
-   $CODEX_HOME/skills/check-fix-accessibility/
-├── SKILL.md
-├── frameworks.md
-└── reference.md
-   ```
-
-3. Restart Codex. The skill will be available when you work on accessibility-related tasks.
-
----
-
-### Google Antigravity
-
-Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `scripts/`, `references/`, or `assets/`. Skills can be **workspace-scoped** or **global**.
-
-**Option A: Workspace (project) skill**
-
-1. In your project root, create the agent skills directory and copy the **check-fix-accessibility** folder:
-
-   ```bash
-   mkdir -p .agent/skills
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility .agent/skills/
-   ```
-
-2. Layout:
-
-   ```
-   .agent/skills/check-fix-accessibility/
-├── SKILL.md
-├── frameworks.md
-└── reference.md
-   ```
-
-3. Restart Antigravity or start a new agent session. The skill's `description` in the frontmatter is used to match user intent (e.g. "accessibility", "a11y", "WCAG").
-
-**Option B: Global (user-wide) skill**
-
-1. Create the global skills directory and copy the **check-fix-accessibility** folder there:
-
-   ```bash
-   mkdir -p ~/.gemini/antigravity/skills
-   git clone https://github.com/YOUR_USERNAME/check-fix-accessibility.git /tmp/check-fix-accessibility-repo
-   cp -r /tmp/check-fix-accessibility-repo/check-fix-accessibility ~/.gemini/antigravity/skills/
-   ```
-
-**Reference:** [Antigravity Skills (Google Codelabs)](https://codelabs.developers.google.com/getting-started-with-antigravity-skills), [Antigravity docs](https://antigravity.google/docs/skills).
-
----
-
-## Quick reference: where files go
-
-| Platform        | Project scope                          | User scope (global)           |
-|----------------|----------------------------------------|-------------------------------|
-| **Cursor**     | `.cursor/skills/check-fix-accessibility/`      | `~/.cursor/skills/check-fix-accessibility/` |
-| **Claude**     | `.claude/rules/` (e.g. `accessibility.mdc`) or reference from `CLAUDE.md` | `~/.claude/skills/check-fix-accessibility/` + `CLAUDE.md` |
-| **Kiro**       | `.kiro/skills/check-fix-accessibility/`        | `~/.kiro/skills/check-fix-accessibility/` |
-| **Codex**      | —                                      | `$CODEX_HOME/skills/check-fix-accessibility/` (default `~/.codex/skills/`) |
-| **Antigravity**| `.agent/skills/check-fix-accessibility/`       | `~/.gemini/antigravity/skills/check-fix-accessibility/` |
+Paths are in the [quick start table](#quick-start). Copy the `check-fix-accessibility` folder into the directory for your tool. From the repo root, this is the project-scope Cursor path:
+
+```bash
+mkdir -p .cursor/skills
+cp -r check-fix-accessibility .cursor/skills/
+```
+
+Swap `.cursor/skills` for the directory in that table. Restart the assistant after copying. The installed folder contains `SKILL.md`, `frameworks.md`, and `reference.md`.
+
+### Notes that are not the copy command
+
+- **Cursor:** Do not put the skill in `~/.cursor/skills-cursor/`. That directory is reserved for Cursor's built-in skills.
+- **Claude Code:** Copy the folder, or add a short rule that points at it. Project (`.claude/`) overrides user (`~/.claude/`).
+
+  ```markdown
+  ---
+  description: Accessibility (a11y) audit and fix guidance
+  paths: "**/*.tsx","**/*.jsx","**/*.vue","**/*.html"
+  ---
+
+  When working on accessibility, read:
+  - check-fix-accessibility/SKILL.md
+  - check-fix-accessibility/frameworks.md
+  - check-fix-accessibility/reference.md
+  ```
+
+- **Kiro:** `SKILL.md` already has `name` and `description` frontmatter. A workspace skill in `.kiro/skills/` overrides the same name in `~/.kiro/skills/`. See [Kiro Agent Skills](https://kiro.dev/docs/skills/).
+- **Codex:** There is no project-scope skills directory. Ask the skill-installer: "Install the skill from GitHub repo `YOUR_USERNAME/check-fix-accessibility`, path `check-fix-accessibility`." Or copy the folder into `$CODEX_HOME/skills/` (default `~/.codex/skills/`).
+- **Antigravity:** The frontmatter `description` is what matches the user's request. [Antigravity skills](https://antigravity.google/docs/skills).
 
 ---
 
@@ -377,7 +156,7 @@ Antigravity uses **Agent Skills** in a directory with `SKILL.md` and optional `s
 - **frameworks.md**: React (`useId`, `createPortal`, React Router, Next.js), Vue (`useId`, `<Teleport>`, Vue Router), Angular (`cdkTrapFocus`, CDK dialog, `NavigationEnd`), plus component axe tests. In **check-fix-accessibility/frameworks.md**.
 - **AAA**: Opt-in only, in [reference.md](check-fix-accessibility/reference.md#when-the-user-asks-for-aaa). A and AA stay the default.
 - **Audit snippet**: Copy-paste `a11y:axe` and `a11y:pa11y` scripts in reference.md. This repo does not ship a runner.
-- **Version**: 1.7.0, reviewed 2026-10-01 against WCAG 2.2 A/AA. [Changelog](check-fix-accessibility/SKILL.md#changelog).
+- **Version**: 1.8.0, reviewed 2026-10-01 against WCAG 2.2 A/AA. [Changelog](check-fix-accessibility/SKILL.md#changelog).
 
 ---
 
