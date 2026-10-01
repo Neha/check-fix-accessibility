@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+reviews:
+  profile: chill
+  high_level_summary: true
+  poem: false
+  review_status: true
+  path_filters:
+    - "!assets/**"
+  path_instructions:
+    - path: "check-fix-accessibility/**"
+      instructions: |
+        This repository is an agent skill for accessibility audits. Flag invented ARIA attributes, wrong WCAG levels, and framework APIs that do not exist. Level A and AA are the default. AAA guidance must stay opt-in.
+    - path: "README.md"
+      instructions: |
+        Check install paths and MCP config locations. MCP is optional and third-party. Cloning the repo must not enable it.
+    - path: "examples/**"
+      instructions: |
+        These samples are documentation. They must not be wired up as a live project config.
